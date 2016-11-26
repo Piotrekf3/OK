@@ -1,35 +1,20 @@
 #include "Operation.h"
 
 
-Operation::Operation(const int & start, const int & duration, bool m, const int & task_index) :maintenance(m)
+Operation::Operation(const int & start, const int & duration)
 {
 	this->start = start;
 	this->duration = duration;
-	this->task_index = task_index;
 }
 
-bool Operation::set_start(const int & start)
+void Operation::set_start(const int & start)
 {
-	if (this->maintenance == false)
-	{
-		this->start = start;
-		return true;
-	}
-	else
-		return false;
-
+	this->start = start;
 }
 
-bool Operation::set_duration(const int & duration)
+void Operation::set_duration(const int & duration)
 {
-	if (this->maintenance == false)
-	{
-		this->duration = duration;
-		return true;
-	}
-	else
-		return false;
-
+	this->duration = duration;
 }
 
 int Operation::get_start()

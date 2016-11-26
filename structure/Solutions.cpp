@@ -1,22 +1,25 @@
 #include "Operation.h"
 #include "Solutions.h"
+#include "Constance.h"
+#include <ctime>
+#include <cstdlib>
 
 void generuj()
 {
-   // n = n_operations;
-   // for (int i = 0; i < n; i++)
-   // {
-     //   this->machine_one[i] = Task(start1, duration1, start2, duration2, ready_time, indeks);
+ //   int n = n_operations;
+//    for (int i = 0; i < n; i++)
+    {
+   //     this->machine_one[i] = Task(start1, duration1, start2, duration2, ready_time, indeks);
      //   this->machine_two[i] = Task(start1, duration1, start2, duration2, ready_time, indeks);
-    //}
+    }
 }
-Solutions::Solutions(Operation mechine_one, Operation mechine_two )
+Solutions::Solutions() //usunalem tu 2 argumenty machine_one i two, bo cmetoda generuj ma generowac maszyny a nie ze uczytkownik wywoluje konstruktor z maszynami, tak mysle przynajmniej
 {
     generuj();
 }
 Solutions::~Solutions()
 {
-    for (int i = 0; i < (n_operations + n_maintenance); i++ )
+    for (int i = 0; i < (Constance::n_operations + Constance::n_maintenance); i++ )
     {
         machine_one[i]=nullptr;
         machine_two[i]=nullptr;

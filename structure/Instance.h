@@ -1,4 +1,5 @@
 #pragma once
+#include"Solutions.h"
 class Instance
 {
 private:
