@@ -13,7 +13,7 @@ void generuj()
      //   this->machine_two[i] = Task(start1, duration1, start2, duration2, ready_time, indeks);
     }
 }
-Solutions::Solutions() //usunalem tu 2 argumenty machine_one i two, bo cmetoda generuj ma generowac maszyny a nie ze uczytkownik wywoluje konstruktor z maszynami, tak mysle przynajmniej
+Solutions::Solutions() //usunalem tu 2 argumenty machine_one i two, bo cmetoda generuj ma generowac maszyny a nie ze uczytkownik wywoluje konstruktor z maszynami, tak mysle przynajmniej//nom masz racjê pozdro :)
 {
     generuj();
 }

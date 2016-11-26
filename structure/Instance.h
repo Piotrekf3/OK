@@ -9,6 +9,6 @@ private:
 public:
 	Instance(const int & solutions_number);
 	~Instance();
-	void generate_instance();
+	void generate_instance_to_file();
 };
 

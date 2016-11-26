@@ -21,7 +21,7 @@ Instance::~Instance()
 	delete[] this->solutions;
 }
 
-void Instance::generate_instance()
+void Instance::generate_instance_to_file()
 {
     int time_op1, time_op2, machine_number_one, machine_number_two, ready_time;
     for( int i = 1; i <= Constance::n_instances; i++ )
