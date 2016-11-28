@@ -29,13 +29,13 @@ void Instance::generate_instance_to_file()
         ofstream file;
         file.open(file_name.c_str());
 
-        file<<Constance::n_operations/2<<";"<<endl;
+        file<<Constance::n_tasks<<";"<<endl;
 
-        for ( int i = 1; i <= Constance::n_operations/2; i++ ) //operacje
+        for ( int i = 1; i <= Constance::n_tasks; i++ ) //operacje
         {
             time_op1 = (rand()%20) + 1;
             time_op2 = (rand()%20) + 1;         //do poustawiania
-            machine_number_one=1;
+			machine_number_one = 1;
             machine_number_two = 2;
             ready_time = (rand()%6);
 
