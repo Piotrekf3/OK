@@ -1,6 +1,13 @@
 #include "Operation.h"
 
 
+Operation::Operation() : maintenance(false)
+{
+	start = 0;
+	duration = 0;
+	task_index = 0;
+}
+
 Operation::Operation(const int & start, const int & duration, bool m, const int & task_index) :maintenance(m)
 {
 	this->start = start;
@@ -42,3 +49,7 @@ int Operation::get_duration()
 	return this->duration;
 }
 
+bool Operation::is_maintenance()
+{
+	return this->maintenance;
+}

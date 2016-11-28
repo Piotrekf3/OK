@@ -10,10 +10,13 @@ private:
 	int index;
 
 	public:
-	Task(const int & start1,const int & dur1,const int & start2,const int & dur2,const int & ready_time,const int & index);
-	int get_index(){ return index; }
-	int get_ready_time() { return ready_time; }
-	Operation * get_operation1();
-	Operation * get_operation2();
+		Task();
+		Task(const int & start1,const int & dur1,const int & start2,const int & dur2,const int & ready_time,const int & index);
+		int get_index(){ return index; }
+		int get_ready_time() { return ready_time; }
+		void set_ready_time(const int & ready_time){ this->ready_time = ready_time; }
+		void set_index(const int & index){ this->index = index; }
+		Operation * get_operation1();
+		Operation * get_operation2();
 
 };

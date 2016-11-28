@@ -1,6 +1,4 @@
-#include "Operation.h"
 #include "Solutions.h"
-#include "Constance.h"
 #include <ctime>
 #include <cstdlib>
 

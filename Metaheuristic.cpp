@@ -4,11 +4,11 @@ using namespace std;
 
 int main()
 {
-	Task task1(3, 2, 1, 2, 0, 0);
-	Operation * op = task1.get_operation1();
-	cout << op->get_start() << endl;
-	cin.ignore();
-	cin.get();
+	//Instance dupa;
+	Instance generator(1);
+	generator.generate_instance_to_file();
+	//cin.ignore();
+	//cin.get();
 	return 0;
 
 }

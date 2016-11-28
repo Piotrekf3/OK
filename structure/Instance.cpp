@@ -1,14 +1,10 @@
 #include "Instance.h"
-#include "Solutions.h"
-#include "COnstance.h"
-#include <fstream>
-#include <string>
-#include <sstream>
-#include <iostream>
-#include <ctime>
-#include <cstdlib>
 
-using namespace std;
+
+Instance::Instance()
+{
+
+}
 
 Instance::Instance(const int & solutions_number)
 {
@@ -39,9 +35,8 @@ void Instance::generate_instance_to_file()
         {
             time_op1 = (rand()%20) + 1;
             time_op2 = (rand()%20) + 1;         //do poustawiania
-            machine_number_one=(rand()%2) + 1;
-            if ( machine_number_one == 1 ) machine_number_two = 2;
-            else machine_number_two = 1;
+            machine_number_one=1;
+            machine_number_two = 2;
             ready_time = (rand()%6);
 
 
@@ -64,4 +59,21 @@ void Instance::generate_instance_to_file()
         }
         file.close();
     }
+}
+
+void Instance::load_from_file(const string & filename)
+{
+	string temp;
+	ifstream file;
+	file.open(filename);
+	getline(file, temp);
+	for (int i = 0; i < Constance::n_tasks; i++)
+	{
+		getline(file, temp);
+		tasks[i].get_operation1()->set_duration(temp[0]-'0');
+		tasks[i].get_operation2()->set_duration(temp[2] - '0');
+		tasks[i].set_ready_time(temp[8] - '0');
+		tasks[i].set_index(i);
+	}
+	file.close();
 }
