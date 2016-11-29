@@ -75,5 +75,11 @@ void Instance::load_from_file(const string & filename)
 		tasks[i].set_ready_time(temp[8] - '0');
 		tasks[i].set_index(i);
 	}
+	getline(file, temp);
+	for (int i = 0; i <= Constance::n_maintenance*2; i++)
+	{
+		getline(file, temp);
+		maintenance[i] = Operation(temp[6] - '0', temp[4] - '0', 1, temp[0] - '0');
+	}
 	file.close();
 }

@@ -53,3 +53,12 @@ bool Operation::is_maintenance()
 {
 	return this->maintenance;
 }
+
+Operation & Operation::operator=(const Operation & op)
+{
+	this->start = op.start;
+	this->duration = op.duration;
+	this->maintenance = op.maintenance;
+	this->task_index = task_index;
+	return *this;
+}

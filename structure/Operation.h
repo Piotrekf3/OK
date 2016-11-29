@@ -4,7 +4,7 @@ class Operation
 private:
 	int start;
 	int duration;
-	const bool maintenance; //1- maintenance,0-nie
+	bool maintenance; //1- maintenance,0-nie
 	int task_index;
 public:
 	Operation();
@@ -15,6 +15,6 @@ public:
 	int get_start();
 	int get_duration();
 	int get_task_index(){ return task_index; }
-
+	Operation & operator=(const Operation & op);
 };
 

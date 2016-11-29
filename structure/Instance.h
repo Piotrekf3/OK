@@ -13,6 +13,8 @@ class Instance
 {
 private:
 	Task tasks [Constance::n_tasks];
+	Operation maintenance[Constance::n_maintenance*2];
+	int machine[Constance::n_maintenance]; //na ktorej maszynie jest maintenance
 	
 	//solutions
 	int solutions_number;
