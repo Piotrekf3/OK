@@ -14,7 +14,6 @@ class Instance
 private:
 	Task tasks [Constance::n_tasks];
 	Operation maintenance[Constance::n_maintenance*2];
-	int machine[Constance::n_maintenance]; //na ktorej maszynie jest maintenance
 	
 	//solutions
 	int solutions_number;
@@ -22,9 +21,12 @@ private:
 
 public:
 	Instance();
-	Instance(const int & solutions_number);
 	~Instance();
 	void generate_instance_to_file();
 	void load_from_file(const string & filename);
+	Task get_task(int index){ return tasks[index]; }
+	Operation get_maintenance(int index){ return maintenance[index]; }
+	Solutions  get_solution(int index){ return solutions[index]; }
+
 };
 

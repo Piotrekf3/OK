@@ -3,14 +3,9 @@
 
 Instance::Instance()
 {
-
+	solutions = new Solutions[Constance::n_solutions];
 }
 
-Instance::Instance(const int & solutions_number)
-{
-	//this->solutions_number = solutions_number;
-	//this->solutions = new Solutions[solutions_number];
-}
 
 Instance::~Instance()
 {
@@ -65,22 +60,82 @@ void Instance::generate_instance_to_file()
 void Instance::load_from_file(const string & filename)
 {
 	string temp;
+	string temp2;
 	ifstream file;
+	int index1 = 0;
+	int index2 = 0;
 	file.open(filename);
-	getline(file, temp);
-	for (int i = 0; i < Constance::n_tasks; i++)
+	if (file.is_open())
 	{
 		getline(file, temp);
-		tasks[i].get_operation1()->set_duration(temp[0]-'0');
-		tasks[i].get_operation2()->set_duration(temp[2] - '0');
-		tasks[i].set_ready_time(temp[8] - '0');
-		tasks[i].set_index(i);
-	}
-	getline(file, temp);
-	for (int i = 0; i <= Constance::n_maintenance*2; i++)
-	{
+		temp2 = temp[0] + temp[1];
+		solutions_number = atoi(temp2.c_str());
+		for (int i = 0; i < Constance::n_tasks; i++)
+		{
+			getline(file, temp);
+			while (temp[index2] != ';')
+				index2++;
+			temp2 = temp.substr(index1, index2);
+			tasks[i].get_operation1()->set_duration(atoi(temp2.c_str()));
+
+			index2++;
+			index1 = index2;
+			while (temp[index2] != ';')
+				index2++;
+			temp2 = temp.substr(index1, index2);
+			tasks[i].get_operation2()->set_duration(atoi(temp2.c_str()));
+
+			index2 = 0;
+			for (int j = 0; j < 4; j++)
+			{
+				while (temp[index2] != ';')
+					index2++;
+				index2++;
+			}
+			
+			temp2 = temp.substr(index2);
+			temp2.pop_back();
+			tasks[i].set_ready_time(atoi(temp2.c_str()));
+			tasks[i].set_index(i);
+			index1 = index2 = 0;
+		}
+		//wczytywanie maintenance
+		int task_index = 0;
+		int duration = 0;
+		int start = 0;
 		getline(file, temp);
-		maintenance[i] = Operation(temp[6] - '0', temp[4] - '0', 1, temp[0] - '0');
+		for (int i = 0; i < Constance::n_maintenance * 2; i++)
+		{
+			getline(file, temp);
+			while (temp[index2] != ';')
+				index2++;
+			temp2 = temp.substr(index1, index2);
+			task_index = atoi(temp2.c_str());
+			cout << task_index << endl;
+
+			index2++;
+			while (temp[index2] != ';')
+				index2++;
+
+			index2++;
+			index1 = index2;
+			while (temp[index2] != ';')
+				index2++;
+			temp2 = temp.substr(index1, index2-index1);
+			duration = atoi(temp2.c_str());
+
+			index2++;
+			index1 = index2;
+			while (temp[index2] != ';')
+				index2++;
+			temp2 = temp.substr(index1, index2-index1);
+			start = atoi(temp2.c_str());
+			index1 = index2 = 0;
+			maintenance[i] = Operation(start, duration, 1, task_index);
+		}
 	}
+	else
+		cout << "nie dziala" << endl;
+	
 	file.close();
 }

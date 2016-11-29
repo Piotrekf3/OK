@@ -4,11 +4,11 @@ using namespace std;
 
 int main()
 {
-	//Instance dupa;
-	Instance generator(1);
-	//generator.generate_instance_to_file();
-	//cin.ignore();
-	//cin.get();
+	Instance generator;
+	generator.load_from_file("../../Instances/Instancja1.txt");
+	cout << generator.get_maintenance(2).get_task_index() << endl;
+	cin.ignore();
+	cin.get();
 	return 0;
 
 }
