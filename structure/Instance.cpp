@@ -48,9 +48,10 @@ void Instance::generate_instance_to_file()
         }
         file<<"MAINTENANCE"<<endl;
         int start_maintenance = (rand()%6) + 5;
-        for ( int i = 1; i <= Constance::n_maintenance; i++ )  //maintenancy
+         for ( int i = 1; i <= Constance::n_maintenance*2; i++ )  //maintenancy
         {
-            machine_number_one=(rand()%2) + 1;
+            if( i > Constance::n_maintenance ) machine_number_one = 2;
+            else machine_number_one = 1;
             file<<i<<";"
                 <<machine_number_one<<";"
                     <<Constance::duration_maintenance<<";"
