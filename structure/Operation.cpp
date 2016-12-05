@@ -1,12 +1,11 @@
 #include "Operation.h"
 
 
-Operation::Operation(bool maintenance) : maintenance(false)
+Operation::Operation() : maintenance(false)
 {
 	start = 0;
 	duration = 0;
 	task_index = 0;
-	this->maintenance = maintenance;
 }
 
 Operation::Operation(const int & start, const int & duration, bool m, const int & task_index) :maintenance(m)
@@ -24,10 +23,7 @@ bool Operation::set_start(const int & start)
 		return true;
 	}
 	else
-	{
 		return false;
-	}
-		
 
 }
 
@@ -62,7 +58,7 @@ Operation & Operation::operator=(const Operation & op)
 {
 	this->start = op.start;
 	this->duration = op.duration;
-	this->task_index = op.task_index;
 	this->maintenance = op.maintenance;
+	this->task_index = task_index;
 	return *this;
 }
