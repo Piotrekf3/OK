@@ -4,11 +4,11 @@
 class Solutions
 {
     private:
-        Operation *machine_one[Constance::n_operations + Constance::n_maintenance];
-		Operation *machine_two[Constance::n_operations + Constance::n_maintenance];
+        Operation *machine_one[Constance::n_operations/2 + Constance::n_maintenance];
+		Operation *machine_two[Constance::n_operations/2 + Constance::n_maintenance];
     public:
         Solutions();
         ~Solutions();
-        Operation* get_machine_one();
-        Operation* get_machine_two();
+        Operation** get_machine_one();
+        Operation** get_machine_two();
 };

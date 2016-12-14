@@ -18,7 +18,7 @@ private:
 	//solutions
 	int solutions_number;
 	Solutions* solutions;
-	void is_blocked( int time_on_machine, bool &blocked, int &index );
+	void insertion_sort(int index, int operations_on_machine);
 
 public:
 	Instance();

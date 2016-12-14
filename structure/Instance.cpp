@@ -1,5 +1,5 @@
 #include "Instance.h"
-
+#include <windows.h>
 
 Instance::Instance()
 {
@@ -14,7 +14,6 @@ Instance::~Instance()
 void Instance::generate_instance_to_file()
 {
     int time_op1, time_op2, machine_number_one, machine_number_two, ready_time;
-    srand(time(NULL));
     for( int i = 1; i <= Constance::n_instances; i++ )
     {
         ostringstream i_s;
@@ -111,7 +110,7 @@ void Instance::load_from_file(const string & filename)
 				index2++;
 			temp2 = temp.substr(index1, index2);
 			task_index = atoi(temp2.c_str());
-			cout << task_index << endl;
+			//cout << task_index << endl;
 
 			index2++;
 			while (temp[index2] != ';')
@@ -140,66 +139,101 @@ void Instance::load_from_file(const string & filename)
 	file.close();
 }
 
-void Instance::is_blocked( int time_on_machine, bool &blocked, int &index )
+
+void Instance::insertion_sort( int index, int operations_on_machine )
 {
-    int min = 1000;
-    for ( int i = 1; i < Constance::n_tasks; i++ )
+    int j;
+    Operation* pom;
+    for ( int i = 1; i < operations_on_machine; i++ )
     {
-        if ( tasks[i].get_ready_time() < min )
+        j = i - 1;
+        while ( (solutions[index].get_machine_one()[j + 1]->get_start() < solutions[index].get_machine_one()[j]->get_start()) && (j >= 0) )
         {
-            if ( tasks[i].get_ready_time() > time_on_machine /*&& notused*/ )
-            {
-                blocked = true;
-                min = tasks[i].get_ready_time();
-                index = i;
-            }
-            else if ( tasks[i].get_ready_time() <= time_on_machine /*&& notused*/ )
-            {
-                blocked = false;
-                break;
-            }
+            pom = solutions[index].get_machine_one()[j + 1];
+            solutions[index].get_machine_one()[j + 1] = solutions[index].get_machine_one()[j];
+            solutions[index].get_machine_one()[j] = pom;
+            j--;
         }
-        //potrzebna zmienna used ktora mowi czy operacja zostala wlozona do maszyny
     }
 }
 
 void Instance::generate_solutions()
 {
-    int n = Constance::n_operations, task_index, time_on_machine = 0, control = 0;
-    bool blocked = false;
-  //  Operation element;
-  //  Operation *machine_one;
-    for ( int i = 0; i < Constance::n_solutions; i++ )
+    int task_index = rand()%(Constance::n_tasks), used[Constance::n_tasks];
+
+    for ( int i = 0; i < Constance::n_tasks; i++ ) used[i] = 0;
+//maszyna  nr  1
+cout<<"zaczynamy"<<endl;
+    for ( int i = 0; i < 1/*Constance::n_solutions*/; i++ )
     {
-        for ( int j = 0; j < Constance::n_tasks; j++ ) //n_tasks bo tyle jest operacji na 1 maszynie
+        cout<<"1 rozwiazanie"<<endl;
+        for ( int k = 0; k < Constance::n_maintenance; k++ )
         {
-            do
+            solutions[i].get_machine_one()[k] = &maintenance[k];
+        }
+        cout<<"main wstawione"<<endl;
+        int j = 0, operations_on_machine = 5;
+        while ( j < Constance::n_tasks )
+        {
+            while( used[task_index] == 1 )  task_index = rand()%(Constance::n_tasks);
+            //cout<<"maintenance"<<solutions[i].get_machine_one()[0]->get_start()<<endl;
+            cout<<"losowanie "<<j<<" zadanie "<<task_index<<" ready_time "<<tasks[task_index].get_ready_time()<<" duration "<<tasks[task_index].get_operation1()->get_duration()<<endl;
+            int index_on_machine = 0;
+            while( index_on_machine < Constance::n_tasks + Constance::n_maintenance )
             {
-                task_index = rand()%Constance::n_tasks;
-                control++;
-                if ( control > 100 )
+                if( index_on_machine == 0 )
                 {
-                    is_blocked( time_on_machine, blocked, task_index );
-                    if ( blocked )
+                    if( tasks[task_index].get_ready_time() + tasks[task_index].get_operation1()->get_duration() < solutions[i].get_machine_one()[index_on_machine]->get_start())
                     {
-                        solutions[i].get_machine_one()[j] = tasks[task_index].get_operation1();
-                        time_on_machine += tasks[task_index].get_operation1()->get_duration();
+                        tasks[task_index].get_operation1()->set_start( tasks[task_index].get_ready_time() );
+                        solutions[i].get_machine_one()[operations_on_machine] = tasks[task_index].get_operation1();
+                       // cout<<"index_on_machine "<<index_on_machine<<endl;
                         break;
                     }
                 }
-            }
-            while( tasks[task_index].get_ready_time() > time_on_machine );
+                else if(  solutions[i].get_machine_one()[index_on_machine] == nullptr )
+                {
+                        if( tasks[task_index].get_ready_time() <= solutions[i].get_machine_one()[index_on_machine - 1]->get_start() + solutions[i].get_machine_one()[index_on_machine - 1]->get_duration())
+                        {
+                            tasks[task_index].get_operation1()->set_start( solutions[i].get_machine_one()[index_on_machine - 1]->get_start() + solutions[i].get_machine_one()[index_on_machine - 1]->get_duration() );
+                            solutions[i].get_machine_one()[operations_on_machine] = tasks[task_index].get_operation1();
+                            break;
+                        }
+                        else
+                        {
+                            tasks[task_index].get_operation1()->set_start( tasks[task_index].get_ready_time() );
+                            solutions[i].get_machine_one()[operations_on_machine] = tasks[task_index].get_operation1();
+                            break;
+                        }
+                }
+                else
+                {
+                    if( (tasks[task_index].get_ready_time() <= solutions[i].get_machine_one()[index_on_machine - 1]->get_start() + solutions[i].get_machine_one()[index_on_machine - 1]->get_duration()) &&
+                        solutions[i].get_machine_one()[index_on_machine - 1]->get_start() + solutions[i].get_machine_one()[index_on_machine - 1]->get_duration() + tasks[task_index].get_operation1()->get_duration() < solutions[i].get_machine_one()[index_on_machine]->get_start())
+                    {
+                        tasks[task_index].get_operation1()->set_start( solutions[i].get_machine_one()[index_on_machine - 1]->get_start() + solutions[i].get_machine_one()[index_on_machine - 1]->get_duration() );
+                        solutions[i].get_machine_one()[operations_on_machine] = tasks[task_index].get_operation1();
+                       // cout<<"index_on_machine else"<<index_on_machine<<endl;
+                        break;
+                    }
 
-            if ( blocked == false )
-            {
-                //  element = *tasks[task_index].get_operation1();
-                //   machine_one = solutions[i].get_machine_one();
-                //   machine_one[j] = &element;   wtf?? nie moge przywpisac adrsu operacji do adresu pod wskaznikiem w tablicy
-                time_on_machine += tasks[task_index].get_operation1()->get_duration();
+                }
+                index_on_machine++;
             }
-            n--;
-            control = 0;
-            blocked = false;
+            cout<<"indeks w ktorym wstawilem"<<operations_on_machine<<endl;
+            operations_on_machine++;
+            cout<<"sortuje..."<<endl;
+            insertion_sort(i,operations_on_machine);
+            cout<<"koniec sortowania"<<endl;
+
+            used[task_index] = 1;
+            j++;
+            //cout<<"wypisz"<<j;
+            //cout<<solutions[i].get_machine_one()[index_on_machine]->get_start()<<";"<<
+            //solutions[i].get_machine_one()[index_on_machine]->get_duration()<<";"<<
+            //task_index<<";"<<endl;
+            //control = 0;
+           // blocked = false;
         }
     }
 }
