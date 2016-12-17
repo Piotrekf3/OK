@@ -5,14 +5,14 @@
 
 Solutions::Solutions()
 {
+    for (int i = 0; i < (Constance::n_operations/2 + Constance::n_maintenance); i++ )
+    {
+        machine_one[i] = nullptr;
+        machine_two[i] = nullptr;
+    }
 }
 Solutions::~Solutions()
 {
-    for (int i = 0; i < (Constance::n_operations/2 + Constance::n_maintenance); i++ )
-    {
-//        delete [] machine_one[i];
-  //      delete [] machine_two[i];
-    }
 }
 Operation** Solutions::get_machine_one()
 {

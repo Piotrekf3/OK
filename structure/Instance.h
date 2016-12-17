@@ -18,7 +18,9 @@ private:
 	//solutions
 	int solutions_number;
 	Solutions* solutions;
-	void insertion_sort(int index, int operations_on_machine);
+	void insertion_sort_machine_one( int index, int operations_on_machine );
+	void insertion_sort_machine_two( int index, int operations_on_machine );
+	int target_function( int index );
 
 public:
 	Instance();
@@ -26,6 +28,7 @@ public:
 	void generate_instance_to_file();
 	void load_from_file(const string & filename);
 	void generate_solutions();
+	void save_solution_to_file( int solution_number );
 	void selection();
 	Task get_task(int index){ return tasks[index]; }
 	Operation get_maintenance(int index){ return maintenance[index]; }
