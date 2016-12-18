@@ -18,6 +18,7 @@ private:
 	//solutions
 	int solutions_number;
 	Solutions* solutions;
+
 	void insertion_sort_machine_one( int index, int operations_on_machine );
 	void insertion_sort_machine_two( int index, int operations_on_machine );
 	int target_function( int index );

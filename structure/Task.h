@@ -1,6 +1,5 @@
 #pragma once
 #include"Operation.h"
-#include<iostream>
 
 class Task
 {

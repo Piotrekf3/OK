@@ -110,7 +110,6 @@ void Instance::load_from_file(const string & filename)
 				index2++;
 			temp2 = temp.substr(index1, index2);
 			task_index = atoi(temp2.c_str());
-			//cout << task_index << endl;
 
 			index2++;
 			while (temp[index2] != ';')
@@ -131,7 +130,6 @@ void Instance::load_from_file(const string & filename)
 			start = atoi(temp2.c_str());
 			index1 = index2 = 0;
 			maintenance[i] = Operation(start, duration, true, task_index);
-			cout << maintenance[i].get_task_index() << endl;
 		}
 	}
 	else

@@ -13,7 +13,6 @@ Operation::Operation(const int & start, const int & duration, bool m, const int 
 	this->start = start;
 	this->duration = duration;
 	this->task_index = task_index;
-	std::cout << this->task_index << std::endl;
 }
 
 bool Operation::set_start(const int & start)

@@ -9,6 +9,9 @@ class Solutions
     public:
         Solutions();
         ~Solutions();
+		void insertion_sort_machine_one(int operations_on_machine);
+		void insertion_sort_machine_two(int operations_on_machine);
+		void insert_operation(int machine_number, Operation * operation,int insert_time=0); //inserts in first free place
         Operation** get_machine_one();
         Operation** get_machine_two();
 };
