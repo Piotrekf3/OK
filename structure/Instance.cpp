@@ -4,11 +4,14 @@
 Instance::Instance()
 {
     solutions = new Solutions[Constance::n_solutions];
+	solutions_number = Constance::n_solutions;
+	crossed_solutions = new Solutions[2*Constance::n_solutions];
+	crossed_solutions_number = 0;
 }
 
 Instance::~Instance()
 {
-//	delete[] this->solutions;
+	delete[] this->solutions;
 }
 
 void Instance::generate_instance_to_file()
@@ -259,12 +262,17 @@ void Instance::insertion_sort_machine_two( int index, int operations_on_machine 
 
 void Instance::generate_solutions()
 {
-    int task_index = rand()%(Constance::n_tasks), used[Constance::n_tasks], index_on_machine = 0, j = 0, operations_on_machine = 5;;
+    int task_index, used[Constance::n_tasks], index_on_machine, j, operations_on_machine;
 
-    for ( int i = 0; i < Constance::n_tasks; i++ ) used[i] = 0;
+    
 
-    for ( int i = 0; i < 1/*Constance::n_solutions*/; i++ )
+    for ( int i = 0; i < Constance::n_solutions; i++ )
     {
+		for (int i = 0; i < Constance::n_tasks; i++) used[i] = 0;
+		task_index = rand() % (Constance::n_tasks);
+		index_on_machine = 0;
+		j = 0;
+		operations_on_machine = 5;
         //maszyna  nr  1
         for ( int k = 0; k < Constance::n_maintenance; k++ )
         {
@@ -275,7 +283,7 @@ void Instance::generate_solutions()
         {
             while( used[task_index] == 1 )  task_index = rand()%(Constance::n_tasks);
 
-            cout<<"losowanie "<<j<<" zadanie "<<task_index<<" ready_time "<<tasks[task_index].get_ready_time()<<" duration "<<tasks[task_index].get_operation1()->get_duration()<<endl;
+            //cout<<"losowanie "<<j<<" zadanie "<<task_index<<" ready_time "<<tasks[task_index].get_ready_time()<<" duration "<<tasks[task_index].get_operation1()->get_duration()<<endl;
             index_on_machine = 0;
             while( index_on_machine < Constance::n_tasks + Constance::n_maintenance )
             {
@@ -316,11 +324,11 @@ void Instance::generate_solutions()
                 }
                 index_on_machine++;
             }
-            cout<<"indeks w ktorym wstawilem"<<operations_on_machine<<endl;
+           // cout<<"indeks w ktorym wstawilem"<<operations_on_machine<<endl;
             operations_on_machine++;
-            cout<<"sortuje..."<<endl;
+            //cout<<"sortuje..."<<endl;
             insertion_sort_machine_one(i,operations_on_machine);
-            cout<<"koniec sortowania"<<endl;
+            //cout<<"koniec sortowania"<<endl;
 
             used[task_index] = 1;
             j++;
@@ -343,7 +351,7 @@ void Instance::generate_solutions()
         {
             while( used[task_index] == 1 )  task_index = rand()%(Constance::n_tasks);
 
-            cout<<"losowanie "<<j<<" zadanie "<<task_index<<" duration "<<tasks[task_index].get_operation2()->get_duration()<<endl;
+            //cout<<"losowanie "<<j<<" zadanie "<<task_index<<" duration "<<tasks[task_index].get_operation2()->get_duration()<<endl;
 
             index_on_machine = 0;
             while( index_on_machine < Constance::n_tasks + Constance::n_maintenance )
@@ -352,7 +360,7 @@ void Instance::generate_solutions()
                 {
                     if( tasks[task_index].get_operation1()->get_start() + tasks[task_index].get_operation1()->get_duration() < solutions[i].get_machine_two()[index_on_machine]->get_start() )
                     {
-                        cout<<"weszlo"<<endl;
+                        //cout<<"weszlo"<<endl;
                         tasks[task_index].get_operation2()->set_start( tasks[task_index].get_operation1()->get_start() + tasks[task_index].get_operation1()->get_duration() );
                         solutions[i].get_machine_two()[operations_on_machine] = tasks[task_index].get_operation2();
                         break;
@@ -377,7 +385,7 @@ void Instance::generate_solutions()
                 }
                 index_on_machine++;
             }
-            cout<<"indeks w ktorym wstawilem na maszynie 2 "<<operations_on_machine<<endl;
+            //cout<<"indeks w ktorym wstawilem na maszynie 2 "<<operations_on_machine<<endl;
             operations_on_machine++;
             insertion_sort_machine_two(i,operations_on_machine);
             used[task_index] = 1;
@@ -414,4 +422,40 @@ void Instance::selection()
         else mutated_solutions[index2] = nullptr;
         mutated_solutions.length--;
     }*/
+}
+
+void Instance::crossing()
+{
+	//losowanie rozwi¹zañ
+	srand(time(NULL));
+
+	int solution1_index = rand() % Constance::n_solutions;
+	//cout << solution1_index << endl;
+
+	int solution2_index = rand() % Constance::n_solutions;
+	while (solution2_index == solution1_index)
+		solution2_index = rand() % Constance::n_solutions;
+	//cout << solution2_index << endl;
+
+	//wstawianie maintenance
+	Solutions solution1, solution2;
+	for (int i = 0; i < Constance::n_maintenance; i++)
+	{
+		solution1.insert_operation(1, &maintenance[i]);
+		solution1.insert_operation(2, &maintenance[i]);
+		solution2.insert_operation(1, &maintenance[i]);
+		solution2.insert_operation(2, &maintenance[i]);
+	}
+	int i = 0;
+	while (i < Constance::n_tasks/2)
+	{
+		if (solutions[solution1_index].get_machine_one()[i]->is_maintenance())
+			;
+		else
+		{
+			solution2.insert_operation(1, solutions[solution1_index].get_machine_one()[i]);
+		}
+	}
+
+
 }

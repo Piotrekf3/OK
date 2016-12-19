@@ -10,6 +10,8 @@ Solutions::Solutions()
         machine_one[i] = nullptr;
         machine_two[i] = nullptr;
     }
+	machine_one_operations_number = 0;
+	machine_two_operations_number = 0;
 }
 Solutions::~Solutions()
 {
@@ -28,11 +30,29 @@ void Solutions::insert_operation(int machine_number, Operation * operation, int 
 	int i = 0;
 	if (machine_number == 1)
 	{
-		while (i < Constance::n_tasks + Constance::n_maintenance && machine_one[i] != nullptr)
-			i++;
-		machine_one[i] = operation;
-		this->insertion_sort_machine_one(i + 1);
+		if (machine_one_operations_number == 0)
+		{
+			operation->set_start(0);
+		}
+		else
+		{
+			while (i < machine_one_operations_number - 1
+				&& (i < Constance::n_tasks + Constance::n_maintenance - 1)
+				&& ((machine_one[i + 1]->get_start() - (machine_one[i]->get_start() + machine_one[i]->get_duration())) < operation->get_duration())
+				&& (machine_one[i]->get_start() + machine_one[i]->get_duration() < insert_time))
+			{
+				i++;
+			}
+			operation->set_start(machine_one[i]->get_start() + machine_one[i]->get_duration());
+		}
+		if (machine_one_operations_number < Constance::n_tasks + Constance::n_maintenance)
+		{
+			machine_one[machine_one_operations_number] = operation;
+			machine_one_operations_number++;
+			this->insertion_sort_machine_one(machine_one_operations_number);
+		}
 	}
+
 	else if (machine_number == 2)
 	{
 		while (i < Constance::n_tasks + Constance::n_maintenance && machine_two[i] != nullptr)
