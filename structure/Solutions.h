@@ -1,6 +1,7 @@
 #pragma once
 #include "Operation.h"
 #include"Constance.h"
+#include<iostream>
 class Solutions
 {
     private:

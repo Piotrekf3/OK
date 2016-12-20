@@ -32,18 +32,25 @@ void Solutions::insert_operation(int machine_number, Operation * operation, int 
 	{
 		if (machine_one_operations_number == 0)
 		{
+			operation->set_start(insert_time);
+		}
+		else if (machine_one[0]->get_start() >= operation->get_duration() && insert_time==0)
+		{
 			operation->set_start(0);
 		}
 		else
 		{
 			while (i < machine_one_operations_number - 1
 				&& (i < Constance::n_tasks + Constance::n_maintenance - 1)
-				&& ((machine_one[i + 1]->get_start() - (machine_one[i]->get_start() + machine_one[i]->get_duration())) < operation->get_duration())
-				&& (machine_one[i]->get_start() + machine_one[i]->get_duration() < insert_time))
+				&& ((machine_one[i + 1]->get_start() - (machine_one[i]->get_start() + machine_one[i]->get_duration())) < operation->get_duration()) 
+				&& ((machine_one[i]->get_start() + machine_one[i]->get_duration()) >= insert_time))
 			{
 				i++;
 			}
-			operation->set_start(machine_one[i]->get_start() + machine_one[i]->get_duration());
+			if (machine_one[i]->get_start() + machine_one[i]->get_duration() >= insert_time)
+				operation->set_start(machine_one[i]->get_start() + machine_one[i]->get_duration()); //ustawia czas na pierwsz¹ woln¹ przerwê
+			else
+				operation->set_start(insert_time);
 		}
 		if (machine_one_operations_number < Constance::n_tasks + Constance::n_maintenance)
 		{
