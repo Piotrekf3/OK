@@ -23,13 +23,13 @@ int main()
 
 
 	Solutions test;
-	test.insert_operation(1, &operations[0],2);
-	test.insert_operation(1, &operations[1],6);
+	test.insert_operation(2, &operations[0]);
+	test.insert_operation(1, &operations[1]);
 	test.insert_operation(1, &operations[2]);
 	for (int i = 0; i <= 2; i++)
 	{
 		cout << operations[i].get_start() << endl;
-		cout << test.get_machine_one()[i]->get_start() << endl;
+		//cout << test.get_machine_two()[i]->get_start() << endl;
 	}
 	cin.ignore();
 	cin.get();

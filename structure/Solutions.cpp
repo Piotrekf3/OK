@@ -62,10 +62,34 @@ void Solutions::insert_operation(int machine_number, Operation * operation, int 
 
 	else if (machine_number == 2)
 	{
-		while (i < Constance::n_tasks + Constance::n_maintenance && machine_two[i] != nullptr)
-			i++;
-		machine_two[i] = operation;
-		this->insertion_sort_machine_two(i + 1);
+		if (machine_two_operations_number == 0)
+		{
+			operation->set_start(insert_time);
+		}
+		else if (machine_two[0]->get_start() >= operation->get_duration() && insert_time == 0)
+		{
+			operation->set_start(0);
+		}
+		else
+		{
+			while (i < machine_two_operations_number - 1
+				&& (i < Constance::n_tasks + Constance::n_maintenance - 1)
+				&& ((machine_two[i + 1]->get_start() - (machine_two[i]->get_start() + machine_two[i]->get_duration())) < operation->get_duration())
+				&& ((machine_two[i]->get_start() + machine_two[i]->get_duration()) >= insert_time))
+			{
+				i++;
+			}
+			if (machine_two[i]->get_start() + machine_two[i]->get_duration() >= insert_time)
+				operation->set_start(machine_two[i]->get_start() + machine_two[i]->get_duration()); //ustawia czas na pierwsz¹ woln¹ przerwê
+			else
+				operation->set_start(insert_time);
+		}
+		if (machine_two_operations_number < Constance::n_tasks + Constance::n_maintenance)
+		{
+			machine_two[machine_two_operations_number] = operation;
+			machine_two_operations_number++;
+			this->insertion_sort_machine_two(machine_two_operations_number);
+		}
 	}
 }
 
