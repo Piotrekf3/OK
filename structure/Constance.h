@@ -8,5 +8,6 @@ class Constance
         static const int n_operations = n_tasks*2;
         static const int n_maintenance = n_tasks/10;
         static const int n_solutions = 100;
+		static const int n_added_solutions = 200;
         static const int duration_maintenance = 5;
 };

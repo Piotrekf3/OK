@@ -20,8 +20,6 @@ private:
 	int solutions_number;
 	Solutions* solutions;
 	
-	int crossed_solutions_number;
-	Solutions* crossed_solutions;
 
 	void insertion_sort_machine_one( int index, int operations_on_machine );
 	void insertion_sort_machine_two( int index, int operations_on_machine );
@@ -38,6 +36,6 @@ public:
 	Task get_task(int index){ return tasks[index]; }
 	Operation get_maintenance(int index){ return maintenance[index]; }
 	Solutions  get_solution(int index){ return solutions[index]; }
-	void crossing(); //potrzebuje tablicy crossed_solutions
+	void crossing();
 };
 
