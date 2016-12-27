@@ -18,6 +18,7 @@ class Solutions
 		int get_machine_two_operations_number() { return machine_two_operations_number; }
 		//wstawia w pierwsze wolne miejsce, jako insert time podaæ ready time
 		void insert_operation(int machine_number, Operation * operation,int insert_time=0);
+		void show(int machine);
         Operation** get_machine_one();
         Operation** get_machine_two();
 };

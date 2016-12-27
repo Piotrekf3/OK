@@ -126,3 +126,32 @@ void Solutions::insertion_sort_machine_two(int operations_on_machine)
 		}
 	}
 }
+
+void Solutions::show(int machine)
+{
+	using std::cout;
+	using std::endl;
+	if (machine == 1)
+	{
+		for (int i = 0; i < Constance::n_tasks+Constance::n_maintenance; i++)
+		{
+			if (this->get_machine_one()[i]->is_maintenance())
+				cout << "m";
+			cout << this->get_machine_one()[i]->get_task_index() << " ";
+		}
+	}
+	else if (machine == 2)
+	{
+		for (int i = 0; i < Constance::n_tasks + Constance::n_maintenance; i++)
+		{
+			if (this->get_machine_two()[i]->is_maintenance())
+				cout << "m";
+			cout << this->get_machine_two()[i]->get_task_index() << " ";
+		}
+	}
+	else
+	{
+		cout << "Bledny numer maszyny";
+	}
+	cout << endl;
+}
