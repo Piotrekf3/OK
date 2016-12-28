@@ -131,7 +131,6 @@ void Solutions::show(int machine)
 {
 	using std::cout;
 	using std::endl;
-	cout << this->get_machine_one()[2]->get_start() << endl << endl;
 	if (machine == 1)
 	{
 		for (int i = 0; i < Constance::n_tasks+Constance::n_maintenance; i++)
