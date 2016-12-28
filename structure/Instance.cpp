@@ -129,7 +129,7 @@ void Instance::load_from_file(const string & filename)
 			temp2 = temp.substr(index1, index2-index1);
 			start = atoi(temp2.c_str());
 			index1 = index2 = 0;
-			maintenance[i] = Operation(start, duration, 1, task_index);
+			maintenance[i] = Operation(start, duration, true, task_index);
 		}
 	}
 	else
@@ -340,6 +340,7 @@ void Instance::generate_solutions()
             j++;
 
         }
+        //for(int k = 0; k < Constance::n_tasks + Constance::n_maintenance; k++) cout<<solutions[i].get_machine_one()[k]->get_start()<<" duration "<<solutions[i].get_machine_one()[k]->get_duration()<<endl;
         //maszyna nr 2
         for ( int i = 0; i < Constance::n_tasks; i++ ) used[i] = 0;
         index_on_machine = 0;
@@ -361,8 +362,8 @@ void Instance::generate_solutions()
             while( index_on_machine < Constance::n_tasks + Constance::n_maintenance )
             {
                 if( index_on_machine == 0 )
-                {
-                    if( tasks[task_index].get_operation1()->get_start() + tasks[task_index].get_operation1()->get_duration() < solutions[i].get_machine_two()[index_on_machine]->get_start() )
+                {//zmiana ponizszego warunku
+                    if( tasks[task_index].get_operation1()->get_start() + tasks[task_index].get_operation1()->get_duration() + tasks[task_index].get_operation2()->get_duration() < solutions[i].get_machine_two()[index_on_machine]->get_start() )
                     {
                         tasks[task_index].get_operation2()->set_start( tasks[task_index].get_operation1()->get_start() + tasks[task_index].get_operation1()->get_duration() );
                         solutions[i].get_machine_two()[operations_on_machine] = tasks[task_index].get_operation2();
@@ -392,7 +393,14 @@ void Instance::generate_solutions()
             used[task_index] = 1;
             j++;
         }
+       // for(int k = 0; k < Constance::n_tasks + Constance::n_maintenance; k++) cout<<solutions[i].get_machine_two()[k]->get_start()<<" duration "<<solutions[i].get_machine_two()[k]->get_duration()<<endl;
     }
+    for(int k = 0; k < Constance::n_solutions; k++)
+    {
+        insertion_sort_machine_one(k,55);
+        insertion_sort_machine_two(k,55);
+    }
+   // for(int k = 0; k < Constance::n_tasks + Constance::n_maintenance; k++) cout<<solutions[0].get_machine_two()[k]->get_start()<<" duration "<<solutions[0].get_machine_two()[k]->get_duration()<<endl;
 }
 int Instance::target_function( int index )
 {
