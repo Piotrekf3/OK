@@ -23,3 +23,10 @@ Operation* Task::get_operation2()
 {
 	return &op2;
 }
+
+void Task::set_index(const int & index)
+{
+	this->index = index;
+	op1.set_task_index(index);
+	op2.set_task_index(index);
+}

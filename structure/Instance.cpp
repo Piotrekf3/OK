@@ -4,7 +4,7 @@
 Instance::Instance()
 {
     solutions = new Solutions[Constance::n_solutions+Constance::crossed_solutions];
-	solutions_number = Constance::n_solutions + Constance::crossed_solutions;
+	solutions_number = Constance::n_solutions;
 }
 
 Instance::~Instance()
@@ -464,12 +464,12 @@ void Instance::crossing()
 	srand(time(NULL));
 
 	int solution1_index = rand() % Constance::n_solutions;
-	//cout << solution1_index << endl;
+	cout << solution1_index << endl;
 
 	int solution2_index = rand() % Constance::n_solutions;
 	while (solution2_index == solution1_index)
 		solution2_index = rand() % Constance::n_solutions;
-	//cout << solution2_index << endl;
+	cout << solution2_index << endl;
 
 	//wstawianie maintenance
 	Solutions *solution1, *solution2;
@@ -483,7 +483,7 @@ void Instance::crossing()
 		solution2->insert_operation(1, &maintenance[i],maintenance[i].get_start());
 		solution2->insert_operation(2, &maintenance[i],maintenance[i].get_start());
 	}
-	cout << solution2->get_machine_one_operations_number() << endl;
+	//cout << solution2->get_machine_one_operations_number() << endl;
 	//wstawianie operacji
 	//pierwsze wylosowane do drugiego tworzonego, maszyna 1
 	int i = 0;
@@ -501,20 +501,20 @@ void Instance::crossing()
 		}
 		i1++;
 	}
-	cout << solution2->get_machine_one_operations_number() << endl;
+	//cout << solution2->get_machine_one_operations_number() << endl;
 	i1 = 0;
 	for (int i = 0; i < (Constance::n_tasks + Constance::n_maintenance); i++)
 	{
 		if (!solutions[solution2_index].get_machine_one()[i]->is_maintenance())
 		{
-			cout << "index=" << solutions[solution2_index].get_machine_one()[i]->get_task_index() << endl;
+			//cout << "index=" << solutions[solution2_index].get_machine_one()[i]->get_task_index() << endl;
 			i1 = 0;
 			while (i1 < solution2->get_machine_one_operations_number()
 				&& (solutions[solution2_index].get_machine_one()[i]->get_task_index() != solution2->get_machine_one()[i1]->get_task_index() || solution2->get_machine_one()[i1]->is_maintenance()))
 			{
 				i1++;
 			}
-			cout << i1 << endl;
+			//cout << i1 << endl;
 			if (i1 == solution2->get_machine_one_operations_number())
 			{
 				solution2->insert_operation(1, solutions[solution2_index].get_machine_one()[i], last_operation_end);
@@ -625,16 +625,16 @@ void Instance::crossing()
 		}
 	}
 	cout << "1 losowane\n";
-	//solutions[solution1_index].show(1);
+	solutions[solution1_index].show(1);
 	cout << "2 losowane\n";
-	//solutions[solution2_index].show(1);
+	solutions[solution2_index].show(1);
 	cout << "1 po krzyzowaniu\n";
 	solutions[solutions_number] = *solution1;
-	//solutions[solutions_number].show(1);
+	solutions[solutions_number].show(1);
 	solutions_number++;
 	cout << "2 po krzyzowaniu\n";
 	solutions[solutions_number] = *solution2;
-	//solutions[solutions_number].show(1);
+	solutions[solutions_number].show(1);
 	solutions_number++;
 
 	//cout << solutions[solution1_index].get_machine_one()[1]->get_task_index() << endl;
