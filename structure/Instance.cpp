@@ -3,12 +3,13 @@
 
 Instance::Instance()
 {
-    solutions = new Solutions[Constance::n_solutions + Constance::crossed_solutions];
+    solutions = new Solutions[Constance::n_solutions+Constance::n_added_solutions];
+	solutions_number = Constance::n_solutions;
 }
 
 Instance::~Instance()
 {
-//	delete[] this->solutions;
+	delete[] this->solutions;
 }
 
 void Instance::generate_instance_to_file()
@@ -222,6 +223,7 @@ void Instance::save_solution_to_file( int solution_number )
     file.close();
 }
 
+
 void Instance::insertion_sort_machine_one( int index, int operations_on_machine )
 {
     int j;
@@ -277,6 +279,8 @@ void Instance::generate_solutions()
 {
     int task_index, used[Constance::n_tasks], index_on_machine, j, operations_on_machine;
 
+    
+
     for ( int i = 0; i < Constance::n_solutions; i++ )
     {
         for ( int i = 0; i < Constance::n_tasks; i++ ) used[i] = 0;
@@ -294,6 +298,7 @@ void Instance::generate_solutions()
         {
             while( used[task_index] == 1 )  task_index = rand()%(Constance::n_tasks);
 
+            //cout<<"losowanie "<<j<<" zadanie "<<task_index<<" ready_time "<<tasks[task_index].get_ready_time()<<" duration "<<tasks[task_index].get_operation1()->get_duration()<<endl;
             index_on_machine = 0;
             while( index_on_machine < Constance::n_tasks + Constance::n_maintenance )
             {
@@ -334,8 +339,12 @@ void Instance::generate_solutions()
                 }
                 index_on_machine++;
             }
+           // cout<<"indeks w ktorym wstawilem"<<operations_on_machine<<endl;
             operations_on_machine++;
+            //cout<<"sortuje..."<<endl;
             insertion_sort_machine_one(i,operations_on_machine);
+            //cout<<"koniec sortowania"<<endl;
+
             used[task_index] = 1;
             j++;
 
@@ -358,6 +367,8 @@ void Instance::generate_solutions()
         {
             while( used[task_index] == 1 )  task_index = rand()%(Constance::n_tasks);
 
+            //cout<<"losowanie "<<j<<" zadanie "<<task_index<<" duration "<<tasks[task_index].get_operation2()->get_duration()<<endl;
+
             index_on_machine = 0;
             while( index_on_machine < Constance::n_tasks + Constance::n_maintenance )
             {
@@ -365,6 +376,7 @@ void Instance::generate_solutions()
                 {//zmiana ponizszego warunku
                     if( tasks[task_index].get_operation1()->get_start() + tasks[task_index].get_operation1()->get_duration() + tasks[task_index].get_operation2()->get_duration() < solutions[i].get_machine_two()[index_on_machine]->get_start() )
                     {
+                        //cout<<"weszlo"<<endl;
                         tasks[task_index].get_operation2()->set_start( tasks[task_index].get_operation1()->get_start() + tasks[task_index].get_operation1()->get_duration() );
                         solutions[i].get_machine_two()[operations_on_machine] = tasks[task_index].get_operation2();
                         break;
@@ -388,6 +400,7 @@ void Instance::generate_solutions()
                 }
                 index_on_machine++;
             }
+            //cout<<"indeks w ktorym wstawilem na maszynie 2 "<<operations_on_machine<<endl;
             operations_on_machine++;
             insertion_sort_machine_two(i,operations_on_machine);
             used[task_index] = 1;
@@ -443,5 +456,187 @@ void Instance::selection( int time )
         delete *solutions[i];
         solutions[i] = nullptr;
     }*/
-    chosen_solutions_amount = 0;
+}
+
+void Instance::crossing()
+{
+	//losowanie rozwi¹zañ
+	srand(time(NULL));
+
+	int solution1_index = rand() % Constance::n_solutions;
+	//cout << solution1_index << endl;
+
+	int solution2_index = rand() % Constance::n_solutions;
+	while (solution2_index == solution1_index)
+		solution2_index = rand() % Constance::n_solutions;
+	//cout << solution2_index << endl;
+
+	//wstawianie maintenance
+	Solutions *solution1, *solution2;
+	solution1 = new Solutions;
+	solution2 = new Solutions;
+
+	for (int i = 0; i < Constance::n_maintenance; i++)
+	{
+		solution1->insert_operation(1, &maintenance[i],maintenance[i].get_start());
+		solution1->insert_operation(2, &maintenance[i],maintenance[i].get_start());
+		solution2->insert_operation(1, &maintenance[i],maintenance[i].get_start());
+		solution2->insert_operation(2, &maintenance[i],maintenance[i].get_start());
+	}
+
+	//wstawianie operacji
+	//pierwsze wylosowane do drugiego tworzonego, maszyna 1
+	int i = 0;
+	int i1 = 0;
+	int last_operation_end = 0;
+	while (i < Constance::n_tasks/2)
+	{
+		if (solutions[solution1_index].get_machine_one()[i1]->is_maintenance())
+			;
+		else
+		{
+			solution2->insert_operation(1, solutions[solution1_index].get_machine_one()[i1],last_operation_end);
+			last_operation_end = solutions[solution1_index].get_machine_one()[i1]->get_start() + solutions[solution1_index].get_machine_one()[i1]->get_duration();
+			i++;
+		}
+		i1++;
+	}
+	i1 = 0;
+	for (int i = 0; i < (Constance::n_tasks + Constance::n_maintenance); i++)
+	{
+		if (!solutions[solution2_index].get_machine_one()[i]->is_maintenance())
+		{
+			i1 = 0;
+			while (i1 < solution2->get_machine_one_operations_number()
+				&& (solutions[solution2_index].get_machine_one()[i]->get_task_index() != solution2->get_machine_one()[i1]->get_task_index() || solution2->get_machine_one()[i1]->is_maintenance()))
+			{
+				i1++;
+			}
+			if (i1 == solution2->get_machine_one_operations_number())
+			{
+				solution2->insert_operation(1, solutions[solution2_index].get_machine_one()[i], last_operation_end);
+				last_operation_end = solutions[solution2_index].get_machine_one()[i]->get_start() + solutions[solution2_index].get_machine_one()[i]->get_duration();
+			}
+		}
+	}
+	//pierwsze wylosowane do drugiego tworzonego, maszyna 2
+	i1 = i = 0;
+	last_operation_end = 0;
+	while (i < Constance::n_tasks / 2)
+	{
+		if (solutions[solution1_index].get_machine_two()[i1]->is_maintenance())
+			;
+		else
+		{
+			solution2->insert_operation(2, solutions[solution1_index].get_machine_two()[i1],last_operation_end);
+			last_operation_end = solutions[solution1_index].get_machine_two()[i1]->get_start() + solutions[solution1_index].get_machine_two()[i1]->get_duration();
+			i++;
+		}
+		i1++;
+	}
+
+	i1 = 0;
+	for (int i = 0; i < (Constance::n_tasks + Constance::n_maintenance); i++)
+	{
+		if (!solutions[solution2_index].get_machine_two()[i]->is_maintenance())
+		{
+			i1 = 0;
+			while (i1 < solution2->get_machine_two_operations_number()
+				&& (solutions[solution2_index].get_machine_two()[i]->get_task_index() != solution2->get_machine_two()[i1]->get_task_index() || solution2->get_machine_two()[i1]->is_maintenance()))
+			{
+				i1++;
+			}
+			if (i1 == solution2->get_machine_two_operations_number())
+			{
+				solution2->insert_operation(2, solutions[solution2_index].get_machine_two()[i], last_operation_end);
+				last_operation_end = solutions[solution2_index].get_machine_two()[i]->get_start() + solutions[solution2_index].get_machine_two()[i]->get_duration();
+			}
+		}
+	}
+	//drugie wylosowane do pierwszego tworzonego, maszyna 1
+	i1 = i = 0;
+	last_operation_end = 0;
+	while (i < Constance::n_tasks / 2)
+	{
+		if (solutions[solution2_index].get_machine_one()[i1]->is_maintenance())
+			;
+		else
+		{
+			solution1->insert_operation(1, solutions[solution2_index].get_machine_one()[i1],last_operation_end);
+			last_operation_end = solutions[solution2_index].get_machine_one()[i1]->get_start() + solutions[solution2_index].get_machine_one()[i1]->get_duration();
+			i++;
+		}
+		i1++;
+	}
+
+	i1 = 0;
+	for (int i = 0; i < (Constance::n_tasks + Constance::n_maintenance); i++)
+	{
+		if (!solutions[solution1_index].get_machine_one()[i]->is_maintenance())
+		{
+			i1 = 0;
+			while (i1 < solution1->get_machine_one_operations_number()
+				&& (solutions[solution1_index].get_machine_one()[i]->get_task_index() != solution1->get_machine_one()[i1]->get_task_index() || solution1->get_machine_one()[i1]->is_maintenance()))
+			{
+				i1++;
+			}
+			if (i1 == solution1->get_machine_one_operations_number())
+			{
+				solution1->insert_operation(1, solutions[solution1_index].get_machine_one()[i], last_operation_end);
+				last_operation_end = solutions[solution1_index].get_machine_one()[i]->get_start() + solutions[solution1_index].get_machine_one()[i]->get_duration();
+			}
+		}
+	}
+	//drugie wylosowane do pierwszego tworzonego, maszyna 2
+	i1 = i = 0;
+	last_operation_end = 0;
+	while (i < Constance::n_tasks / 2)
+	{
+		if (solutions[solution2_index].get_machine_two()[i1]->is_maintenance())
+			;
+		else
+		{
+			solution1->insert_operation(2, solutions[solution2_index].get_machine_two()[i1], last_operation_end);
+			last_operation_end = solutions[solution2_index].get_machine_two()[i1]->get_start() + solutions[solution2_index].get_machine_two()[i1]->get_duration();
+			i++;
+		}
+		i1++;
+	}
+
+	i1 = 0;
+	for (int i = 0; i < (Constance::n_tasks + Constance::n_maintenance); i++)
+	{
+		if (!solutions[solution1_index].get_machine_two()[i]->is_maintenance())
+		{
+			i1 = 0;
+			while (i1 < solution1->get_machine_two_operations_number()
+				&& (solutions[solution1_index].get_machine_two()[i]->get_task_index() != solution1->get_machine_two()[i1]->get_task_index() || solution1->get_machine_two()[i1]->is_maintenance()))
+			{
+				i1++;
+			}
+			if (i1 == solution1->get_machine_two_operations_number())
+			{
+				solution1->insert_operation(2, solutions[solution1_index].get_machine_two()[i], last_operation_end);
+				last_operation_end = solutions[solution1_index].get_machine_two()[i]->get_start() + solutions[solution1_index].get_machine_two()[i]->get_duration();
+			}
+		}
+	}
+	cout << "1 losowane\n";
+	solutions[solution1_index].show(1);
+	cout << "2 losowane\n";
+	solutions[solution2_index].show(1);
+	cout << "1 po krzyzowaniu\n";
+	solutions[solutions_number] = *solution1;
+	solutions[solutions_number].show(1);
+	solutions_number++;
+	cout << "2 po krzyzowaniu\n";
+	solutions[solutions_number] = *solution2;
+	solutions[solutions_number].show(1);
+	solutions_number++;
+
+	//cout << solutions[solution1_index].get_machine_one()[1]->get_task_index() << endl;
+	//cout << solution2->get_machine_one()[1]->get_task_index() << endl;
+
+
+
 }
