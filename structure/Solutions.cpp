@@ -14,6 +14,11 @@ Solutions::Solutions()
 Solutions::~Solutions()
 {
 }
+/*bool Solutions::set_solution_indeks(int indeks) sprawdzalem na potrzeby selekcji (numerowalem rozwiazania)
+{
+    this->solution_indeks = indeks;
+    return true;
+}*/
 Operation** Solutions::get_machine_one()
 {
     return machine_one;
