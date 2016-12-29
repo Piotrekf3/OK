@@ -277,143 +277,129 @@ void Instance::insertion_sort_solutions( int chosen_solutions_amount )
 
 void Instance::generate_solutions()
 {
-    int task_index, used[Constance::n_tasks], index_on_machine, j, operations_on_machine;
+	int task_index, used[Constance::n_tasks], index_on_machine, j, operations_on_machine;
 
-    
+	for (int ind = 0; ind < Constance::n_solutions; ind++)
+	{
+		for (int i = 0; i < Constance::n_tasks; i++) used[i] = 0;
+		j = 0;
+		task_index = rand() % (Constance::n_tasks);
+		index_on_machine = 0;
+		operations_on_machine = 5;
+		//maszyna  nr  1
+		for (int k = 0; k < Constance::n_maintenance; k++)
+		{
+			solutions[ind].get_machine_one()[k] = &maintenance[k];
+		}
 
-    for ( int i = 0; i < Constance::n_solutions; i++ )
-    {
-        for ( int i = 0; i < Constance::n_tasks; i++ ) used[i] = 0;
-        j = 0;
-        task_index = rand()%(Constance::n_tasks);
-        index_on_machine = 0;
-        operations_on_machine = 5;
-        //maszyna  nr  1
-        for ( int k = 0; k < Constance::n_maintenance; k++ )
-        {
-            solutions[i].get_machine_one()[k] = &maintenance[k];
-        }
+		while (j < Constance::n_tasks)
+		{
+			while (used[task_index] == 1)  task_index = rand() % (Constance::n_tasks);
 
-        while ( j < Constance::n_tasks )
-        {
-            while( used[task_index] == 1 )  task_index = rand()%(Constance::n_tasks);
+			index_on_machine = 0;
+			while (index_on_machine < Constance::n_tasks + Constance::n_maintenance)
+			{
+				if (index_on_machine == 0)
+				{
+					if (tasks[task_index].get_ready_time() + tasks[task_index].get_operation1()->get_duration() < solutions[ind].get_machine_one()[index_on_machine]->get_start())
+					{
+						tasks[task_index].get_operation1()->set_start(tasks[task_index].get_ready_time());
+						solutions[ind].get_machine_one()[operations_on_machine] = new Operation(*tasks[task_index].get_operation1());
+						break;
+					}
+				}
+				else if (solutions[ind].get_machine_one()[index_on_machine] == nullptr)
+				{
+					if (tasks[task_index].get_ready_time() <= solutions[ind].get_machine_one()[index_on_machine - 1]->get_start() + solutions[ind].get_machine_one()[index_on_machine - 1]->get_duration())
+					{
+						tasks[task_index].get_operation1()->set_start(solutions[ind].get_machine_one()[index_on_machine - 1]->get_start() + solutions[ind].get_machine_one()[index_on_machine - 1]->get_duration());
+						solutions[ind].get_machine_one()[operations_on_machine] = new Operation(*tasks[task_index].get_operation1());
+						break;
+					}
+					else
+					{
+						tasks[task_index].get_operation1()->set_start(tasks[task_index].get_ready_time());
+						solutions[ind].get_machine_one()[operations_on_machine] = new Operation(*tasks[task_index].get_operation1());
+						break;
+					}
+				}
+				else
+				{
+					if ((tasks[task_index].get_ready_time() <= solutions[ind].get_machine_one()[index_on_machine - 1]->get_start() + solutions[ind].get_machine_one()[index_on_machine - 1]->get_duration()) &&
+						solutions[ind].get_machine_one()[index_on_machine - 1]->get_start() + solutions[ind].get_machine_one()[index_on_machine - 1]->get_duration() + tasks[task_index].get_operation1()->get_duration() < solutions[ind].get_machine_one()[index_on_machine]->get_start())
+					{
+						tasks[task_index].get_operation1()->set_start(solutions[ind].get_machine_one()[index_on_machine - 1]->get_start() + solutions[ind].get_machine_one()[index_on_machine - 1]->get_duration());
+						solutions[ind].get_machine_one()[operations_on_machine] = new Operation(*tasks[task_index].get_operation1());
+						break;
+					}
 
-            //cout<<"losowanie "<<j<<" zadanie "<<task_index<<" ready_time "<<tasks[task_index].get_ready_time()<<" duration "<<tasks[task_index].get_operation1()->get_duration()<<endl;
-            index_on_machine = 0;
-            while( index_on_machine < Constance::n_tasks + Constance::n_maintenance )
-            {
-                if( index_on_machine == 0 )
-                {
-                    if( tasks[task_index].get_ready_time() + tasks[task_index].get_operation1()->get_duration() < solutions[i].get_machine_one()[index_on_machine]->get_start())
-                    {
-                        tasks[task_index].get_operation1()->set_start( tasks[task_index].get_ready_time() );
-                        solutions[i].get_machine_one()[operations_on_machine] = tasks[task_index].get_operation1();
-                        break;
-                    }
-                }
-                else if(  solutions[i].get_machine_one()[index_on_machine] == nullptr )
-                {
-                        if( tasks[task_index].get_ready_time() <= solutions[i].get_machine_one()[index_on_machine - 1]->get_start() + solutions[i].get_machine_one()[index_on_machine - 1]->get_duration())
-                        {
-                            tasks[task_index].get_operation1()->set_start( solutions[i].get_machine_one()[index_on_machine - 1]->get_start() + solutions[i].get_machine_one()[index_on_machine - 1]->get_duration() );
-                            solutions[i].get_machine_one()[operations_on_machine] = tasks[task_index].get_operation1();
-                            break;
-                        }
-                        else
-                        {
-                            tasks[task_index].get_operation1()->set_start( tasks[task_index].get_ready_time() );
-                            solutions[i].get_machine_one()[operations_on_machine] = tasks[task_index].get_operation1();
-                            break;
-                        }
-                }
-                else
-                {
-                    if( (tasks[task_index].get_ready_time() <= solutions[i].get_machine_one()[index_on_machine - 1]->get_start() + solutions[i].get_machine_one()[index_on_machine - 1]->get_duration()) &&
-                        solutions[i].get_machine_one()[index_on_machine - 1]->get_start() + solutions[i].get_machine_one()[index_on_machine - 1]->get_duration() + tasks[task_index].get_operation1()->get_duration() < solutions[i].get_machine_one()[index_on_machine]->get_start())
-                    {
-                        tasks[task_index].get_operation1()->set_start( solutions[i].get_machine_one()[index_on_machine - 1]->get_start() + solutions[i].get_machine_one()[index_on_machine - 1]->get_duration() );
-                        solutions[i].get_machine_one()[operations_on_machine] = tasks[task_index].get_operation1();
-                        break;
-                    }
+				}
+				index_on_machine++;
+			}
+			operations_on_machine++;
+			insertion_sort_machine_one(ind, operations_on_machine);
+			used[task_index] = 1;
+			j++;
 
-                }
-                index_on_machine++;
-            }
-           // cout<<"indeks w ktorym wstawilem"<<operations_on_machine<<endl;
-            operations_on_machine++;
-            //cout<<"sortuje..."<<endl;
-            insertion_sort_machine_one(i,operations_on_machine);
-            //cout<<"koniec sortowania"<<endl;
+		}
+		//maszyna nr 2
+		for (int i = 0; i < Constance::n_tasks; i++) used[i] = 0;
+		index_on_machine = 0;
+		j = 0;
 
-            used[task_index] = 1;
-            j++;
+		task_index = rand() % (Constance::n_tasks);
 
-        }
-        //for(int k = 0; k < Constance::n_tasks + Constance::n_maintenance; k++) cout<<solutions[i].get_machine_one()[k]->get_start()<<" duration "<<solutions[i].get_machine_one()[k]->get_duration()<<endl;
-        //maszyna nr 2
-        for ( int i = 0; i < Constance::n_tasks; i++ ) used[i] = 0;
-        index_on_machine = 0;
-        j = 0;
+		for (int k = 5; k < Constance::n_maintenance * 2; k++)
+		{
+			solutions[ind].get_machine_two()[k - 5] = &maintenance[k];
+		}
+		operations_on_machine = 5;
 
-        task_index = rand()%(Constance::n_tasks);
+		while (j < Constance::n_tasks)
+		{
+			while (used[task_index] == 1)  task_index = rand() % (Constance::n_tasks);
 
-        for ( int k = 5 ; k < Constance::n_maintenance * 2; k++ )
-        {
-            solutions[i].get_machine_two()[k - 5] = &maintenance[k];
-        }
-        operations_on_machine = 5;
-
-        while ( j < Constance::n_tasks )
-        {
-            while( used[task_index] == 1 )  task_index = rand()%(Constance::n_tasks);
-
-            //cout<<"losowanie "<<j<<" zadanie "<<task_index<<" duration "<<tasks[task_index].get_operation2()->get_duration()<<endl;
-
-            index_on_machine = 0;
-            while( index_on_machine < Constance::n_tasks + Constance::n_maintenance )
-            {
-                if( index_on_machine == 0 )
-                {//zmiana ponizszego warunku
-                    if( tasks[task_index].get_operation1()->get_start() + tasks[task_index].get_operation1()->get_duration() + tasks[task_index].get_operation2()->get_duration() < solutions[i].get_machine_two()[index_on_machine]->get_start() )
-                    {
-                        //cout<<"weszlo"<<endl;
-                        tasks[task_index].get_operation2()->set_start( tasks[task_index].get_operation1()->get_start() + tasks[task_index].get_operation1()->get_duration() );
-                        solutions[i].get_machine_two()[operations_on_machine] = tasks[task_index].get_operation2();
-                        break;
-                    }
-                }
-                else if(  solutions[i].get_machine_two()[index_on_machine] == nullptr )
-                {
-                    tasks[task_index].get_operation2()->set_start( solutions[i].get_machine_two()[index_on_machine - 1]->get_start() + solutions[i].get_machine_two()[index_on_machine - 1]->get_duration() );
-                    solutions[i].get_machine_two()[operations_on_machine] = tasks[task_index].get_operation2();
-                    break;
-                }
-                else
-                {
-                    if( (tasks[task_index].get_operation1()->get_start() + tasks[task_index].get_operation1()->get_duration() <= solutions[i].get_machine_two()[index_on_machine - 1]->get_start() + solutions[i].get_machine_two()[index_on_machine - 1]->get_duration()) &&
-                        solutions[i].get_machine_two()[index_on_machine - 1]->get_start() + solutions[i].get_machine_two()[index_on_machine - 1]->get_duration() + tasks[task_index].get_operation2()->get_duration() < solutions[i].get_machine_two()[index_on_machine]->get_start())
-                    {
-                        tasks[task_index].get_operation2()->set_start( solutions[i].get_machine_two()[index_on_machine - 1]->get_start() + solutions[i].get_machine_two()[index_on_machine - 1]->get_duration() );
-                        solutions[i].get_machine_two()[operations_on_machine] = tasks[task_index].get_operation2();
-                        break;
-                    }
-                }
-                index_on_machine++;
-            }
-            //cout<<"indeks w ktorym wstawilem na maszynie 2 "<<operations_on_machine<<endl;
-            operations_on_machine++;
-            insertion_sort_machine_two(i,operations_on_machine);
-            used[task_index] = 1;
-            j++;
-        }
-       // for(int k = 0; k < Constance::n_tasks + Constance::n_maintenance; k++) cout<<solutions[i].get_machine_two()[k]->get_start()<<" duration "<<solutions[i].get_machine_two()[k]->get_duration()<<endl;
-    }
-    for(int k = 0; k < Constance::n_solutions; k++)
-    {
-        insertion_sort_machine_one(k,55);
-        insertion_sort_machine_two(k,55);
-    }
-   // for(int k = 0; k < Constance::n_tasks + Constance::n_maintenance; k++) cout<<solutions[0].get_machine_two()[k]->get_start()<<" duration "<<solutions[0].get_machine_two()[k]->get_duration()<<endl;
+			index_on_machine = 0;
+			while (index_on_machine < Constance::n_tasks + Constance::n_maintenance)
+			{
+				if (index_on_machine == 0)
+				{//zmiana ponizszego warunku
+					if (tasks[task_index].get_operation1()->get_start() + tasks[task_index].get_operation1()->get_duration() + tasks[task_index].get_operation2()->get_duration() < solutions[ind].get_machine_two()[index_on_machine]->get_start())
+					{
+						tasks[task_index].get_operation2()->set_start(tasks[task_index].get_operation1()->get_start() + tasks[task_index].get_operation1()->get_duration());
+						solutions[ind].get_machine_two()[operations_on_machine] = new Operation(*tasks[task_index].get_operation2());
+						break;
+					}
+				}
+				else if (solutions[ind].get_machine_two()[index_on_machine] == nullptr)
+				{
+					tasks[task_index].get_operation2()->set_start(solutions[ind].get_machine_two()[index_on_machine - 1]->get_start() + solutions[ind].get_machine_two()[index_on_machine - 1]->get_duration());
+					solutions[ind].get_machine_two()[operations_on_machine] = new Operation(*tasks[task_index].get_operation2());
+					break;
+				}
+				else
+				{
+					if ((tasks[task_index].get_operation1()->get_start() + tasks[task_index].get_operation1()->get_duration() <= solutions[ind].get_machine_two()[index_on_machine - 1]->get_start() + solutions[ind].get_machine_two()[index_on_machine - 1]->get_duration()) &&
+						solutions[ind].get_machine_two()[index_on_machine - 1]->get_start() + solutions[ind].get_machine_two()[index_on_machine - 1]->get_duration() + tasks[task_index].get_operation2()->get_duration() < solutions[ind].get_machine_two()[index_on_machine]->get_start())
+					{
+						tasks[task_index].get_operation2()->set_start(solutions[ind].get_machine_two()[index_on_machine - 1]->get_start() + solutions[ind].get_machine_two()[index_on_machine - 1]->get_duration());
+						solutions[ind].get_machine_two()[operations_on_machine] = new Operation(*tasks[task_index].get_operation2());
+						break;
+					}
+				}
+				index_on_machine++;
+			}
+			operations_on_machine++;
+			insertion_sort_machine_two(ind, operations_on_machine);
+			used[task_index] = 1;
+			j++;
+		}
+	}
+	for (int k = 0; k < Constance::n_solutions; k++)
+	{
+		insertion_sort_machine_one(k, 55);
+		insertion_sort_machine_two(k, 55);
+	}
 }
 int Instance::target_function( int index )
 {
@@ -426,36 +412,44 @@ int Instance::target_function( int index )
     return sum_of_end_time;
 }
 
-void Instance::selection( int time )
+void Instance::selection(int time)
 {
-    int solution_index, chosen_solutions_amount = 0, proportion ;
-    Solutions pom;
-    if( time < 1 ) proportion = 0.3 * Constance::crossed_solutions;
-    else if( time < 2 ) proportion = 0.4 * Constance::crossed_solutions;
-    else if( time < 3 ) proportion = 0.5 * Constance::crossed_solutions;
-    else if( time < 4 ) proportion = 0.6 * Constance::crossed_solutions;
-    else if( time < 5 ) proportion = 0.7 * Constance::crossed_solutions;
-    else proportion = 0.8 * Constance::crossed_solutions;
+	int solution_index, chosen_solutions_amount = 0, proportion;
+	Solutions temp;
 
-    //ruletka
-    while( proportion < Constance::crossed_solutions )
-    {
-        solution_index = rand()%( Constance::crossed_solutions - chosen_solutions_amount ) + chosen_solutions_amount;
-        cout<<"ruletka: "<<target_function(solution_index)<<endl;
-        pom = solutions[solution_index];
-        solutions[solution_index] = solutions[chosen_solutions_amount];
-        solutions[chosen_solutions_amount] = pom;
-        chosen_solutions_amount++;
-        proportion++;
-    }
-    //turniej
-    insertion_sort_solutions( chosen_solutions_amount );
-    for( int i = chosen_solutions_amount; i < Constance::n_solutions; i++ ) cout<<i<<" turniej"<<target_function(i)<<endl;
-    /*for( int i = 100; i < Constance::crossed_solutions; i++ )
-    {
-        delete *solutions[i];
-        solutions[i] = nullptr;
-    }*/
+	if (time < 1) proportion = 0.3 * Constance::crossed_solutions;
+	else if (time < 2) proportion = 0.4 * Constance::crossed_solutions;
+	else if (time < 3) proportion = 0.5 * Constance::crossed_solutions;
+	else if (time < 4) proportion = 0.6 * Constance::crossed_solutions;
+	else if (time < 5) proportion = 0.7 * Constance::crossed_solutions;
+	else proportion = 0.8 * Constance::crossed_solutions;
+
+	//ruletka
+	while (proportion < Constance::crossed_solutions)
+	{
+		solution_index = rand() % (Constance::crossed_solutions - chosen_solutions_amount) + chosen_solutions_amount;
+		temp = solutions[solution_index];
+		solutions[solution_index] = solutions[chosen_solutions_amount];
+		solutions[chosen_solutions_amount] = temp;
+		chosen_solutions_amount++;
+		proportion++;
+	}
+	//turniej
+	insertion_sort_solutions(chosen_solutions_amount);
+	/*for( int i = 100; i < Constance::crossed_solutions; i++ )
+	{
+	delete *solutions[i];
+	solutions[i] = nullptr;
+	}*/
+	//sprawdzialem czy sie nie powtarzaja
+	/* for( int i = 0; i < Constance::n_solutions-1; i++ )
+	for( int j = i + 1; j < Constance::n_solutions; j++ )
+	if( solutions[i].solution_indeks == solutions[j].solution_indeks )
+	{
+	cout<<"dupa"<<endl;
+	cout<<"i"<<i<<endl;
+	cout<<"j"<<j<<endl;
+	}*/
 }
 
 void Instance::crossing()

@@ -8,6 +8,7 @@ private:
 	int task_index;
 public:
 	Operation();
+	Operation(Operation &op);
 	Operation(const int & start, const int & duration, bool maintenance, const int & task_index);
 	bool set_start(const int & start);
 	bool set_duration(const int & duration);
