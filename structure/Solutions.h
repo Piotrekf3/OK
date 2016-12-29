@@ -2,6 +2,7 @@
 #include "Operation.h"
 #include"Constance.h"
 #include<iostream>
+#include<algorithm>
 class Solutions
 {
     private:

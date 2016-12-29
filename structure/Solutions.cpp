@@ -139,6 +139,20 @@ void Solutions::show(int machine)
 				cout << "m";
 			cout << this->get_machine_one()[i]->get_task_index() << " ";
 		}
+		cout << endl<<endl;
+		for (int i = 0; i < Constance::n_tasks + Constance::n_maintenance; i++)
+		{
+			if (this->get_machine_one()[i]->is_maintenance())
+				cout << "m";
+			cout << this->get_machine_one()[i]->get_start() << " ";
+		}
+		cout << endl << endl;
+		for (int i = 0; i < Constance::n_tasks + Constance::n_maintenance; i++)
+		{
+			if (this->get_machine_one()[i]->is_maintenance())
+				cout << "m";
+			cout << this->get_machine_one()[i]->get_duration() << " ";
+		}
 	}
 	else if (machine == 2)
 	{
