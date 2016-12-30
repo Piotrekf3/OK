@@ -470,13 +470,14 @@ void Instance::crossing()
 	Solutions *solution1, *solution2;
 	solution1 = new Solutions;
 	solution2 = new Solutions;
+	int dupa = 0;
 
 	for (int i = 0; i < Constance::n_maintenance; i++)
 	{
-		solution1->insert_operation(1, &maintenance[i],maintenance[i].get_start());
-		solution1->insert_operation(2, &maintenance[i],maintenance[i].get_start());
-		solution2->insert_operation(1, &maintenance[i],maintenance[i].get_start());
-		solution2->insert_operation(2, &maintenance[i],maintenance[i].get_start());
+		solution1->insert_operation(1, &maintenance[i],dupa,maintenance[i].get_start());
+		solution1->insert_operation(2, &maintenance[i],dupa,maintenance[i].get_start());
+		solution2->insert_operation(1, &maintenance[i],dupa,maintenance[i].get_start());
+		solution2->insert_operation(2, &maintenance[i],dupa,maintenance[i].get_start());
 	}
 	//cout << solution2->get_machine_one_operations_number() << endl;
 	//wstawianie operacji
@@ -490,8 +491,7 @@ void Instance::crossing()
 			;
 		else
 		{
-			solution2->insert_operation(1, solutions[solution1_index].get_machine_one()[i1], max(last_operation_end, tasks[solutions[solution1_index].get_machine_one()[i1]->get_task_index()].get_ready_time()));
-			last_operation_end = solutions[solution1_index].get_machine_one()[i1]->get_start() + solutions[solution1_index].get_machine_one()[i1]->get_duration();
+			solution2->insert_operation(1, solutions[solution1_index].get_machine_one()[i1],last_operation_end, max(last_operation_end, tasks[solutions[solution1_index].get_machine_one()[i1]->get_task_index()].get_ready_time()));
 			i++;
 		}
 		i1++;
@@ -512,8 +512,7 @@ void Instance::crossing()
 			//cout << i1 << endl;
 			if (i1 == solution2->get_machine_one_operations_number())
 			{
-				solution2->insert_operation(1, solutions[solution2_index].get_machine_one()[i], max(last_operation_end, tasks[solutions[solution2_index].get_machine_one()[i]->get_task_index()].get_ready_time()));
-				last_operation_end = solutions[solution2_index].get_machine_one()[i]->get_start() + solutions[solution2_index].get_machine_one()[i]->get_duration();
+				solution2->insert_operation(1, solutions[solution2_index].get_machine_one()[i],last_operation_end, max(last_operation_end, tasks[solutions[solution2_index].get_machine_one()[i]->get_task_index()].get_ready_time()));
 			}
 		}
 	}
@@ -526,8 +525,7 @@ void Instance::crossing()
 			;
 		else
 		{
-			solution2->insert_operation(2, solutions[solution1_index].get_machine_two()[i1], max(last_operation_end, tasks[solutions[solution1_index].get_machine_two()[i1]->get_task_index()].get_ready_time()));
-			last_operation_end = solutions[solution1_index].get_machine_two()[i1]->get_start() + solutions[solution1_index].get_machine_two()[i1]->get_duration();
+			solution2->insert_operation(2, solutions[solution1_index].get_machine_two()[i1],last_operation_end, max(last_operation_end, tasks[solutions[solution1_index].get_machine_two()[i1]->get_task_index()].get_ready_time()));
 			i++;
 		}
 		i1++;
@@ -546,8 +544,7 @@ void Instance::crossing()
 			}
 			if (i1 == solution2->get_machine_two_operations_number())
 			{
-				solution2->insert_operation(2, solutions[solution2_index].get_machine_two()[i], max(last_operation_end, tasks[solutions[solution2_index].get_machine_two()[i]->get_task_index()].get_ready_time()));
-				last_operation_end = solutions[solution2_index].get_machine_two()[i]->get_start() + solutions[solution2_index].get_machine_two()[i]->get_duration();
+				solution2->insert_operation(2, solutions[solution2_index].get_machine_two()[i],last_operation_end, max(last_operation_end, tasks[solutions[solution2_index].get_machine_two()[i]->get_task_index()].get_ready_time()));
 			}
 		}
 	}
@@ -560,8 +557,7 @@ void Instance::crossing()
 			;
 		else
 		{
-			solution1->insert_operation(1, solutions[solution2_index].get_machine_one()[i1], max(last_operation_end, tasks[solutions[solution2_index].get_machine_one()[i1]->get_task_index()].get_ready_time()));
-			last_operation_end = solutions[solution2_index].get_machine_one()[i1]->get_start() + solutions[solution2_index].get_machine_one()[i1]->get_duration();
+			solution1->insert_operation(1, solutions[solution2_index].get_machine_one()[i1],last_operation_end, max(last_operation_end, tasks[solutions[solution2_index].get_machine_one()[i1]->get_task_index()].get_ready_time()));
 			i++;
 		}
 		i1++;
@@ -580,8 +576,7 @@ void Instance::crossing()
 			}
 			if (i1 == solution1->get_machine_one_operations_number())
 			{
-				solution1->insert_operation(1, solutions[solution1_index].get_machine_one()[i], max(last_operation_end, tasks[solutions[solution1_index].get_machine_one()[i]->get_task_index()].get_ready_time()));
-				last_operation_end = solutions[solution1_index].get_machine_one()[i]->get_start() + solutions[solution1_index].get_machine_one()[i]->get_duration();
+				solution1->insert_operation(1, solutions[solution1_index].get_machine_one()[i], last_operation_end, max(last_operation_end, tasks[solutions[solution1_index].get_machine_one()[i]->get_task_index()].get_ready_time()));
 			}
 		}
 	}
@@ -594,8 +589,7 @@ void Instance::crossing()
 			;
 		else
 		{
-			solution1->insert_operation(2, solutions[solution2_index].get_machine_two()[i1], max(last_operation_end, tasks[solutions[solution2_index].get_machine_two()[i1]->get_task_index()].get_ready_time()));
-			last_operation_end = solutions[solution2_index].get_machine_two()[i1]->get_start() + solutions[solution2_index].get_machine_two()[i1]->get_duration();
+			solution1->insert_operation(2, solutions[solution2_index].get_machine_two()[i1], last_operation_end, max(last_operation_end, tasks[solutions[solution2_index].get_machine_two()[i1]->get_task_index()].get_ready_time()));
 			i++;
 		}
 		i1++;
@@ -614,8 +608,7 @@ void Instance::crossing()
 			}
 			if (i1 == solution1->get_machine_two_operations_number())
 			{
-				solution1->insert_operation(2, solutions[solution1_index].get_machine_two()[i], max(last_operation_end, tasks[solutions[solution1_index].get_machine_two()[i]->get_task_index()].get_ready_time()));
-				last_operation_end = solutions[solution1_index].get_machine_two()[i]->get_start() + solutions[solution1_index].get_machine_two()[i]->get_duration();
+				solution1->insert_operation(2, solutions[solution1_index].get_machine_two()[i], last_operation_end, max(last_operation_end, tasks[solutions[solution1_index].get_machine_two()[i]->get_task_index()].get_ready_time()));
 			}
 		}
 	}
@@ -623,13 +616,24 @@ void Instance::crossing()
 	solutions[solution1_index].show(1);
 	cout << "2 losowane\n";
 	solutions[solution2_index].show(1);
-	//cout << "1 po krzyzowaniu\n";
-	//solutions[solutions_number] = *solution1;
-	//solutions[solutions_number].show(1);
-	//solutions_number++;
-	cout << "2 po krzyzowaniu\n";
-	solutions[solutions_number] = *solution2;
+	cout << "1 po krzyzowaniu\n";
+	solutions[solutions_number] = *solution1;
 	solutions[solutions_number].show(1);
+	cout << endl;
+	for (int i = 0; i < Constance::n_tasks + Constance::n_maintenance; i++)
+	{
+		if (solutions[solutions_number].get_machine_one()[i]->is_maintenance())
+			cout << "m";
+		cout << tasks[solutions[solutions_number].get_machine_one()[i]->get_task_index()].get_ready_time() << " ";
+	}
+	cout << endl << endl;
+	//cout << "2 maszyna\n";
+	//solutions[solutions_number].show(2);
+	solutions_number++;
+	
+	//cout << "2 po krzyzowaniu\n";
+	solutions[solutions_number] = *solution2;
+	//solutions[solutions_number].show(1);
 	solutions_number++;
 
 	//cout << solutions[solution1_index].get_machine_one()[1]->get_task_index() << endl;

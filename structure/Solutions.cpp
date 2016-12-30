@@ -25,36 +25,40 @@ Operation** Solutions::get_machine_two()
     return machine_two;
 }
 
-void Solutions::insert_operation(int machine_number, Operation * operation, int insert_time)
+void Solutions::insert_operation(int machine_number, Operation * operation,int & inserted_end_time, int insert_time)
 {
+	Operation *temp = new Operation(*operation);
 	int i = 0;
 	if (machine_number == 1)
 	{
 		if (machine_one_operations_number == 0)
 		{
-			operation->set_start(insert_time);
+			temp->set_start(insert_time);
 		}
-		else if (machine_one[0]->get_start() >= operation->get_duration() && insert_time==0)
+		else if (machine_one[0]->get_start() >= (temp->get_duration() + insert_time))
 		{
-			operation->set_start(0);
+			temp->set_start(insert_time);
+			//std::cout << "dupa\n";
 		}
 		else
 		{
 			while (i < machine_one_operations_number - 1
 				&& (i < Constance::n_tasks + Constance::n_maintenance - 1)
-				&& ((machine_one[i + 1]->get_start() - (machine_one[i]->get_start() + machine_one[i]->get_duration())) < operation->get_duration()) 
-				&& ((machine_one[i]->get_start() + machine_one[i]->get_duration()) >= insert_time))
+				&& (((machine_one[i + 1]->get_start() - (machine_one[i]->get_start() + machine_one[i]->get_duration())) < temp->get_duration()) || ((machine_one[i]->get_start() + machine_one[i]->get_duration()) < insert_time))
+				&& ((machine_one[i + 1]->get_start() - (machine_one[i]->get_start() + machine_one[i]->get_duration() + insert_time)) < temp->get_duration()))
 			{
 				i++;
 			}
 			if (machine_one[i]->get_start() + machine_one[i]->get_duration() >= insert_time)
-				operation->set_start(machine_one[i]->get_start() + machine_one[i]->get_duration()); //ustawia czas na pierwsz¹ woln¹ przerwê
+				temp->set_start(machine_one[i]->get_start() + machine_one[i]->get_duration()); //ustawia czas na pierwsz¹ woln¹ przerwê
 			else
-				operation->set_start(insert_time);
+				temp->set_start(insert_time);
 		}
 		if (machine_one_operations_number < Constance::n_tasks + Constance::n_maintenance)
 		{
-			machine_one[machine_one_operations_number] = operation;
+			machine_one[machine_one_operations_number] = temp; //wstawianie
+			inserted_end_time = temp->get_start() + temp->get_duration();
+			std::cout << "inserted_end_time =" << inserted_end_time << std::endl;
 			machine_one_operations_number++;
 			this->insertion_sort_machine_one(machine_one_operations_number);
 		}
@@ -64,29 +68,30 @@ void Solutions::insert_operation(int machine_number, Operation * operation, int 
 	{
 		if (machine_two_operations_number == 0)
 		{
-			operation->set_start(insert_time);
+			temp->set_start(insert_time);
 		}
-		else if (machine_two[0]->get_start() >= operation->get_duration() && insert_time == 0)
+		else if (machine_two[0]->get_start() >= temp->get_duration() && insert_time == 0)
 		{
-			operation->set_start(0);
+			temp->set_start(0);
 		}
 		else
 		{
 			while (i < machine_two_operations_number - 1
 				&& (i < Constance::n_tasks + Constance::n_maintenance - 1)
-				&& ((machine_two[i + 1]->get_start() - (machine_two[i]->get_start() + machine_two[i]->get_duration())) < operation->get_duration())
+				&& ((machine_two[i + 1]->get_start() - (machine_two[i]->get_start() + machine_two[i]->get_duration())) < temp->get_duration())
 				&& ((machine_two[i]->get_start() + machine_two[i]->get_duration()) >= insert_time))
 			{
 				i++;
 			}
 			if (machine_two[i]->get_start() + machine_two[i]->get_duration() >= insert_time)
-				operation->set_start(machine_two[i]->get_start() + machine_two[i]->get_duration()); //ustawia czas na pierwsz¹ woln¹ przerwê
+				temp->set_start(machine_two[i]->get_start() + machine_two[i]->get_duration()); //ustawia czas na pierwsz¹ woln¹ przerwê
 			else
-				operation->set_start(insert_time);
+				temp->set_start(insert_time);
 		}
 		if (machine_two_operations_number < Constance::n_tasks + Constance::n_maintenance)
 		{
-			machine_two[machine_two_operations_number] = operation;
+			machine_two[machine_two_operations_number] = temp; //wstawianie
+			inserted_end_time = temp->get_start() + temp->get_duration();
 			machine_two_operations_number++;
 			this->insertion_sort_machine_two(machine_two_operations_number);
 		}
@@ -161,6 +166,20 @@ void Solutions::show(int machine)
 			if (this->get_machine_two()[i]->is_maintenance())
 				cout << "m";
 			cout << this->get_machine_two()[i]->get_task_index() << " ";
+		}
+		cout << endl << endl;
+		for (int i = 0; i < Constance::n_tasks + Constance::n_maintenance; i++)
+		{
+			if (this->get_machine_two()[i]->is_maintenance())
+				cout << "m";
+			cout << this->get_machine_two()[i]->get_start() << " ";
+		}
+		cout << endl << endl;
+		for (int i = 0; i < Constance::n_tasks + Constance::n_maintenance; i++)
+		{
+			if (this->get_machine_two()[i]->is_maintenance())
+				cout << "m";
+			cout << this->get_machine_two()[i]->get_duration() << " ";
 		}
 	}
 	else
