@@ -15,7 +15,7 @@ private:
 		int get_index(){ return index; }
 		int get_ready_time() { return ready_time; }
 		void set_ready_time(const int & ready_time){ this->ready_time = ready_time; }
-		void set_index(const int & index){ this->index = index; }
+		void set_index(const int & index);
 		Operation * get_operation1();
 		Operation * get_operation2();
 
