@@ -38,19 +38,19 @@ void Solutions::insert_operation(int machine_number, Operation * operation,int &
 		else if (machine_one[0]->get_start() >= (temp->get_duration() + insert_time))
 		{
 			temp->set_start(insert_time);
-			//std::cout << "dupa\n";
 		}
 		else
 		{
 			while (i < machine_one_operations_number - 1
 				&& (i < Constance::n_tasks + Constance::n_maintenance - 1)
-				&& (((machine_one[i + 1]->get_start() - (machine_one[i]->get_start() + machine_one[i]->get_duration())) < temp->get_duration()) || ((machine_one[i]->get_start() + machine_one[i]->get_duration()) < insert_time))
-				&& ((machine_one[i + 1]->get_start() - (machine_one[i]->get_start() + machine_one[i]->get_duration() + insert_time)) < temp->get_duration()))
+				&& ((machine_one[i + 1]->get_start() - (machine_one[i]->get_start() + machine_one[i]->get_duration())) < temp->get_duration()))
 			{
 				i++;
 			}
+			
 			if (machine_one[i]->get_start() + machine_one[i]->get_duration() >= insert_time)
 				temp->set_start(machine_one[i]->get_start() + machine_one[i]->get_duration()); //ustawia czas na pierwsz¹ woln¹ przerwê
+	
 			else
 				temp->set_start(insert_time);
 		}
@@ -70,21 +70,22 @@ void Solutions::insert_operation(int machine_number, Operation * operation,int &
 		{
 			temp->set_start(insert_time);
 		}
-		else if (machine_two[0]->get_start() >= temp->get_duration() && insert_time == 0)
+		else if (machine_two[0]->get_start() >= (temp->get_duration() + insert_time))
 		{
-			temp->set_start(0);
+			temp->set_start(insert_time);
 		}
 		else
 		{
 			while (i < machine_two_operations_number - 1
 				&& (i < Constance::n_tasks + Constance::n_maintenance - 1)
-				&& ((machine_two[i + 1]->get_start() - (machine_two[i]->get_start() + machine_two[i]->get_duration())) < temp->get_duration())
-				&& ((machine_two[i]->get_start() + machine_two[i]->get_duration()) >= insert_time))
+				&& ((machine_two[i + 1]->get_start() - (machine_two[i]->get_start() + machine_two[i]->get_duration())) < temp->get_duration()))
 			{
 				i++;
 			}
+
 			if (machine_two[i]->get_start() + machine_two[i]->get_duration() >= insert_time)
 				temp->set_start(machine_two[i]->get_start() + machine_two[i]->get_duration()); //ustawia czas na pierwsz¹ woln¹ przerwê
+
 			else
 				temp->set_start(insert_time);
 		}
