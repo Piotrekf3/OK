@@ -2,6 +2,7 @@
 #include "Operation.h"
 #include"Constance.h"
 #include<iostream>
+#include<algorithm>
 class Solutions
 {
     private:
@@ -19,7 +20,7 @@ class Solutions
 		int get_machine_one_operations_number(){ return machine_one_operations_number; }
 		int get_machine_two_operations_number() { return machine_two_operations_number; }
 		//wstawia w pierwsze wolne miejsce, jako insert time podaæ ready time
-		void insert_operation(int machine_number, Operation * operation,int insert_time=0);
+		void insert_operation(int machine_number, Operation * operation, int & inserted_end_time, int insert_time = 0);
 		void show(int machine);
         Operation** get_machine_one();
         Operation** get_machine_two();
