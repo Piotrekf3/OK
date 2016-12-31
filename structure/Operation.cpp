@@ -8,14 +8,14 @@ Operation::Operation() : maintenance(false)
 	task_index = 0;
 }
 
-Operation::Operation(Operation &op) : maintenance(op.is_maintenance())
+Operation::Operation( Operation &op ) : maintenance(op.is_maintenance())
 {
 	this->start = op.get_start();
 	this->duration = op.get_duration();
 	this->task_index = op.get_task_index();
 }
 
-Operation::Operation(const int & start, const int & duration, bool m, const int & task_index) :maintenance(m)
+Operation::Operation(const int & start, const int & duration, bool m, const int & task_index) : maintenance(m)
 {
 	this->start = start;
 	this->duration = duration;
@@ -59,13 +59,4 @@ int Operation::get_duration()
 bool Operation::is_maintenance()
 {
 	return this->maintenance;
-}
-
-Operation & Operation::operator=(const Operation & op)
-{
-	this->start = op.start;
-	this->duration = op.duration;
-	this->maintenance = op.maintenance;
-	this->task_index = task_index;
-	return *this;
 }

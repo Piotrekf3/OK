@@ -29,9 +29,9 @@ public:
 	void generate_solutions();
 	void save_solution_to_file( int solution_number );
 	void selection( int time );
-	Task get_task(int index){ return tasks[index]; }
 	void crossing();
+	Task get_task(int index){ return tasks[index]; }
 	Operation get_maintenance(int index){ return maintenance[index]; }
-	Solutions  get_solution(int index){ return solutions[index]; }
+	Solutions get_solution(int index){ return solutions[index]; }
 };
 

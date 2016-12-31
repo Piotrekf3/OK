@@ -47,10 +47,10 @@ void Solutions::insert_operation(int machine_number, Operation * operation,int &
 			{
 				i++;
 			}
-			
+
 			if (machine_one[i]->get_start() + machine_one[i]->get_duration() >= insert_time)
 				temp->set_start(machine_one[i]->get_start() + machine_one[i]->get_duration()); //ustawia czas na pierwsz¹ woln¹ przerwê
-	
+
 			else
 				temp->set_start(insert_time);
 		}
