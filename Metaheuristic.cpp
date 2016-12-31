@@ -8,10 +8,12 @@ int main()
 	generator.load_from_file("../../Instances/Instancja1.txt");
 	//cout << generator.get_task(2).get_index() << endl;
 	generator.generate_solutions();
-	/*generator.get_solution(2).show(2);
-	cout << endl;
-	generator.get_solution(3).show(2);*/
-	cout << "koniec generowania rozw\n";
+	cout << "1 maszyna\n";
+	//generator.get_solution(2).show(1);
+	//cout << endl;
+	cout << "2 maszyna\n";
+	//generator.get_solution(2).show(2);
+	//cout << "koniec generowania rozw\n";
 	generator.crossing();
 
 
