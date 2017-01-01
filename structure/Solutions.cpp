@@ -49,7 +49,7 @@ void Solutions::insert_operation(int machine_number, Operation * operation,int &
 			}
 
 			if (machine_one[i]->get_start() + machine_one[i]->get_duration() >= insert_time)
-				temp->set_start(machine_one[i]->get_start() + machine_one[i]->get_duration()); //ustawia czas na pierwsz¹ woln¹ przerwê
+				temp->set_start(machine_one[i]->get_start() + machine_one[i]->get_duration()); //ustawia czas na pierwszÂ¹ wolnÂ¹ przerwÃª
 
 			else
 				temp->set_start(insert_time);
@@ -84,7 +84,7 @@ void Solutions::insert_operation(int machine_number, Operation * operation,int &
 			}
 
 			if (machine_two[i]->get_start() + machine_two[i]->get_duration() >= insert_time)
-				temp->set_start(machine_two[i]->get_start() + machine_two[i]->get_duration()); //ustawia czas na pierwsz¹ woln¹ przerwê
+				temp->set_start(machine_two[i]->get_start() + machine_two[i]->get_duration()); //ustawia czas na pierwszÂ¹ wolnÂ¹ przerwÃª
 
 			else
 				temp->set_start(insert_time);

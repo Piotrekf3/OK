@@ -1,6 +1,6 @@
 #pragma once
-#include"Solutions.h"
-#include"Task.h"
+#include "Solutions.h"
+#include "Task.h"
 #include <fstream>
 #include <string>
 #include <sstream>
@@ -30,6 +30,7 @@ public:
 	void save_solution_to_file( int solution_number );
 	void selection( int time );
 	void crossing();
+	void mutation();
 	Task get_task(int index){ return tasks[index]; }
 	Operation get_maintenance(int index){ return maintenance[index]; }
 	Solutions get_solution(int index){ return solutions[index]; }
