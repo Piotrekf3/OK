@@ -14,7 +14,13 @@ int main()
 	cout << "2 maszyna\n";
 	//generator.get_solution(2).show(2);
 	//cout << "koniec generowania rozw\n";
-	generator.crossing();
+	for (int i = 0; i < 100; i++)
+	{	
+		generator.mutation();
+		generator.crossing();
+		
+	}
+
 
 
 
