@@ -58,7 +58,6 @@ void Solutions::insert_operation(int machine_number, Operation * operation,int &
 		{
 			machine_one[machine_one_operations_number] = temp; //wstawianie
 			inserted_end_time = temp->get_start() + temp->get_duration();
-			//std::cout << "inserted_end_time =" << inserted_end_time << std::endl;
 			machine_one_operations_number++;
 			this->insertion_sort_machine_one(machine_one_operations_number);
 		}

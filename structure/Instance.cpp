@@ -359,7 +359,7 @@ void Instance::generate_solutions()
             j++;
 
         }
-        solutions[ind].set_machine_one_operations_number( operations_on_machine);
+        solutions[ind].set_machine_one_operations_number( operations_on_machine );
 
         //maszyna nr 2
         for ( int i = 0; i < Constance::n_tasks; i++ ) used[i] = 0;
@@ -414,7 +414,11 @@ void Instance::generate_solutions()
             used[task_index] = 1;
             j++;
         }
+<<<<<<< HEAD
         solutions[ind].set_machine_two_operations_number( operations_on_machine );
+=======
+		solutions[ind].set_machine_two_operations_number(operations_on_machine);
+>>>>>>> 661d8d499d4793aab6b4a3aa12bf9bc31f27576e
     }
 }
 
@@ -665,8 +669,8 @@ void Instance::mutation()
             solutions[solution_index].get_machine_one()[task_index_second + 1]->get_start() - ( solutions[solution_index].get_machine_one()[task_index_second - 1]->get_start() + solutions[solution_index].get_machine_one()[task_index_second - 1]->get_duration() )
             >= solutions[solution_index].get_machine_one()[task_index_first]->get_duration() )
         {
-            cout<<"normalnie"<<endl;
-            cout<<solution_index<<endl;
+           // cout<<"normalnie"<<endl;
+           // cout<<solution_index<<endl;
             solutions[solution_index].get_machine_one()[task_index_first]->set_start( solutions[solution_index].get_machine_one()[task_index_second]->get_start() );
             solutions[solution_index].get_machine_one()[task_index_second]->set_start( solutions[solution_index].get_machine_one()[task_index_first - 1]->get_start() + solutions[solution_index].get_machine_one()[task_index_first - 1]->get_duration() );
             temp = solutions[solution_index].get_machine_one()[task_index_first];
@@ -684,8 +688,8 @@ void Instance::mutation()
                  solutions[solution_index].get_machine_one()[task_index_second + 1]->get_start() - ( solutions[solution_index].get_machine_one()[task_index_second - 1]->get_start() + solutions[solution_index].get_machine_one()[task_index_second - 1]->get_duration() )
                  >= solutions[solution_index].get_machine_one()[task_index_first]->get_duration() )
         {
-            cout<<"first=poczatek"<<endl;
-            cout<<solution_index<<endl;
+           // cout<<"first=poczatek"<<endl;
+            //cout<<solution_index<<endl;
             solutions[solution_index].get_machine_one()[task_index_first]->set_start( solutions[solution_index].get_machine_one()[task_index_second]->get_start() );
             solutions[solution_index].get_machine_one()[task_index_second]->set_start( tasks[ solutions[solution_index].get_machine_one()[task_index_second]->get_task_index() ].get_ready_time() );
             temp = solutions[solution_index].get_machine_one()[task_index_first];
@@ -700,8 +704,8 @@ void Instance::mutation()
                  &&
                  tasks[ solutions[solution_index].get_machine_one()[task_index_second]->get_task_index() ].get_ready_time() <= solutions[solution_index].get_machine_one()[task_index_first]->get_start() )
         {
-            cout<<"first=poczatek i drugi = koniec"<<endl;
-            cout<<solution_index<<endl;
+          //  cout<<"first=poczatek i drugi = koniec"<<endl;
+            //cout<<solution_index<<endl;
             solutions[solution_index].get_machine_one()[task_index_first]->set_start( solutions[solution_index].get_machine_one()[task_index_second]->get_start() );
             solutions[solution_index].get_machine_one()[task_index_second]->set_start( tasks[ solutions[solution_index].get_machine_one()[task_index_second]->get_task_index() ].get_ready_time() );
             temp = solutions[solution_index].get_machine_one()[task_index_first];
