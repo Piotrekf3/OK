@@ -273,7 +273,7 @@ void Instance::insertion_sort_solutions( int chosen_solutions_amount )
     for ( int i = chosen_solutions_amount + 1; i < Constance::crossed_solutions + Constance::n_solutions; i++ )
     {
         j = i - 1;
-        while ( (j >= 0) && (target_function( j + 1 ) < target_function( j )) )
+        while ( (j >= chosen_solutions_amount) && (target_function( j + 1 ) < target_function( j )) )
         {
             pom = solutions[j + 1];
             solutions[j + 1] = solutions[j];
@@ -424,15 +424,15 @@ void Instance::selection( int time )
     int solution_index, chosen_solutions_amount = 0, proportion ;
     Solutions temp;
 
-    if( time < 1 ) proportion = 0.3 * ( Constance::crossed_solutions + Constance::n_solutions );
-    else if( time < 2 ) proportion = 0.4 * ( Constance::crossed_solutions + Constance::n_solutions );
-    else if( time < 3 ) proportion = 0.5 * ( Constance::crossed_solutions + Constance::n_solutions );
-    else if( time < 4 ) proportion = 0.6 * ( Constance::crossed_solutions + Constance::n_solutions );
-    else if( time < 5 ) proportion = 0.7 * ( Constance::crossed_solutions + Constance::n_solutions );
+    if( time < 1 ) proportion = 0.3 * (Constance::n_solutions );
+    else if( time < 2 ) proportion = 0.4 * (Constance::n_solutions );
+    else if( time < 3 ) proportion = 0.5 * (Constance::n_solutions );
+    else if( time < 4 ) proportion = 0.6 * (Constance::n_solutions );
+    else if( time < 5 ) proportion = 0.7 * (Constance::n_solutions );
     else proportion = 0.8 * ( Constance::crossed_solutions + Constance::n_solutions );
 
     //ruletka
-    while( proportion < Constance::crossed_solutions + Constance::n_solutions)
+    while( proportion < Constance::n_solutions)
     {
         solution_index = rand() % ( Constance::crossed_solutions + Constance::n_solutions - chosen_solutions_amount ) + chosen_solutions_amount;
         temp = solutions[solution_index];
@@ -443,6 +443,7 @@ void Instance::selection( int time )
     }
     //turniej
     insertion_sort_solutions( chosen_solutions_amount );
+	solutions_number = Constance::n_solutions;
 }
 
 void Instance::crossing()
@@ -620,6 +621,7 @@ void Instance::crossing()
 	solutions_number++;
 	solutions[solutions_number] = *solution2;
 	solutions_number++;
+	cout << "solutions number=" << solutions_number << endl;
 }
 
 void Instance::mutation()
