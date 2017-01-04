@@ -144,92 +144,101 @@ void Instance::load_from_file(const string & filename)
 	file.close();
 }
 
-void Instance::save_solution_to_file( int solution_number )
+void Instance::save_solution_to_file()
 {
     int best_time, begin_time, idle_index_m1 = 1, maintenance_index_m1 = 1, idle_index_m2 = 1, maintenance_index_m2 = 1, all_idle_duration_m1 = 0,
     all_idle_duration_m2 = 0;
     ostringstream i_s;
     string file_name;
     ofstream file;
-
-    i_s<<solution_number + 1;                     //konwersja z int na string
-    file_name = "../Solutions/Solution" + i_s.str() + ".txt";   //nazwa pliku (scie¿ka)
-    file.open(file_name.c_str());
-    if( file.good() )
+    for( int solution_number = 0; solution_number < Constance::n_solutions; solution_number++ )
     {
-        begin_time = target_function( solution_number );
-        best_time = 100; //zmienic
-        file << best_time << "," <<
-                begin_time << endl;
-        file << "M1: ";
-        for( int i = 0; i < Constance::n_tasks + Constance::n_maintenance; i++ )
+        i_s<<solution_number + 1;                     //konwersja z int na string
+        file_name = "../Solutions/Solution" + i_s.str() + ".txt";   //nazwa pliku (scie¿ka)
+        file.open(file_name.c_str());
+        if( file.good() )
         {
-            if( i == 0 && solutions[solution_number].get_machine_one()[i]->get_start() != 0 )
+            begin_time = target_function( solution_number );
+            best_time = 100; //zmienic
+            file << best_time << "," <<
+                    begin_time << endl;
+            file << "M1: ";
+            for( int i = 0; i < Constance::n_tasks + Constance::n_maintenance; i++ )
             {
-                file << "idle" << idle_index_m1 << "_" << "M1,0," << solutions[solution_number].get_machine_one()[i]->get_start() << ",";
-                idle_index_m1++;
-                all_idle_duration_m1 += solutions[solution_number].get_machine_one()[i]->get_start();
-            }
-            else if( solutions[solution_number].get_machine_one()[i - 1]->get_start() + solutions[solution_number].get_machine_one()[i - 1]->get_duration() !=
-                    solutions[solution_number].get_machine_one()[i]->get_start() )
-            {
-                file << "idle" << idle_index_m1 << "_" << "M1," <<
-                    solutions[solution_number].get_machine_one()[i - 1]->get_start() + solutions[solution_number].get_machine_one()[i - 1]->get_duration() <<
-                        "," << solutions[solution_number].get_machine_one()[i]->get_start() -
-                            (solutions[solution_number].get_machine_one()[i - 1]->get_start() + solutions[solution_number].get_machine_one()[i - 1]->get_duration()) << ",";
-                idle_index_m1++;
-                all_idle_duration_m1 += solutions[solution_number].get_machine_one()[i]->get_start() -
-                    (solutions[solution_number].get_machine_one()[i - 1]->get_start() + solutions[solution_number].get_machine_one()[i - 1]->get_duration());
-            }
-            if( solutions[solution_number].get_machine_one()[i]->is_maintenance() )
-            {
-                file << "maint" << maintenance_index_m1 << "_M1," <<
-                    solutions[solution_number].get_machine_one()[i]->get_start() <<
-                        "," << solutions[solution_number].get_machine_one()[i]->get_duration() << ",";
-                maintenance_index_m1++;
-            }
-            else    file << "op1_" << solutions[solution_number].get_machine_one()[i]->get_task_index() <<
-                        "," << solutions[solution_number].get_machine_one()[i]->get_start() <<
+                if( i == 0 && solutions[solution_number].get_machine_one()[i]->get_start() != 0 )
+                {
+                    file << "idle" << idle_index_m1 << "_" << "M1,0," << solutions[solution_number].get_machine_one()[i]->get_start() << ",";
+                    idle_index_m1++;
+                    all_idle_duration_m1 += solutions[solution_number].get_machine_one()[i]->get_start();
+                }
+                else if( solutions[solution_number].get_machine_one()[i - 1]->get_start() + solutions[solution_number].get_machine_one()[i - 1]->get_duration() !=
+                        solutions[solution_number].get_machine_one()[i]->get_start() )
+                {
+                    file << "idle" << idle_index_m1 << "_" << "M1," <<
+                        solutions[solution_number].get_machine_one()[i - 1]->get_start() + solutions[solution_number].get_machine_one()[i - 1]->get_duration() <<
+                            "," << solutions[solution_number].get_machine_one()[i]->get_start() -
+                                (solutions[solution_number].get_machine_one()[i - 1]->get_start() + solutions[solution_number].get_machine_one()[i - 1]->get_duration()) << ",";
+                    idle_index_m1++;
+                    all_idle_duration_m1 += solutions[solution_number].get_machine_one()[i]->get_start() -
+                        (solutions[solution_number].get_machine_one()[i - 1]->get_start() + solutions[solution_number].get_machine_one()[i - 1]->get_duration());
+                }
+                if( solutions[solution_number].get_machine_one()[i]->is_maintenance() )
+                {
+                    file << "maint" << maintenance_index_m1 << "_M1," <<
+                        solutions[solution_number].get_machine_one()[i]->get_start() <<
                             "," << solutions[solution_number].get_machine_one()[i]->get_duration() << ",";
-        }
-        file << endl << "M2: ";
-        for( int i = 0; i < Constance::n_tasks + Constance::n_maintenance; i++ )
-        {
-            if( i == 0 && solutions[solution_number].get_machine_two()[i]->get_start() != 0 )
-            {
-                file << "idle" << idle_index_m2 << "_" << "M2,0," << solutions[solution_number].get_machine_two()[i]->get_start() << ",";
-                idle_index_m2++;
-                all_idle_duration_m2 += solutions[solution_number].get_machine_two()[i]->get_start();
+                    maintenance_index_m1++;
+                }
+                else    file << "op1_" << solutions[solution_number].get_machine_one()[i]->get_task_index() <<
+                            "," << solutions[solution_number].get_machine_one()[i]->get_start() <<
+                                "," << solutions[solution_number].get_machine_one()[i]->get_duration() << ",";
             }
-            else if( solutions[solution_number].get_machine_two()[i - 1]->get_start() + solutions[solution_number].get_machine_two()[i - 1]->get_duration() !=
-                    solutions[solution_number].get_machine_two()[i]->get_start() )
+            file << endl << "M2: ";
+            for( int i = 0; i < Constance::n_tasks + Constance::n_maintenance; i++ )
             {
-                file << "idle" << idle_index_m2 << "_" << "M2," <<
-                    solutions[solution_number].get_machine_two()[i - 1]->get_start() + solutions[solution_number].get_machine_two()[i - 1]->get_duration() <<
-                        "," << solutions[solution_number].get_machine_two()[i]->get_start() -
-                            (solutions[solution_number].get_machine_two()[i - 1]->get_start() + solutions[solution_number].get_machine_two()[i - 1]->get_duration()) << ",";
-                idle_index_m2++;
-                all_idle_duration_m2 += solutions[solution_number].get_machine_two()[i]->get_start() -
-                    (solutions[solution_number].get_machine_two()[i - 1]->get_start() + solutions[solution_number].get_machine_two()[i - 1]->get_duration());
-            }
-            if( solutions[solution_number].get_machine_two()[i]->is_maintenance() )
-            {
-                file << "maint" << maintenance_index_m2 << "_M2," <<
-                    solutions[solution_number].get_machine_two()[i]->get_start() <<
-                        "," << solutions[solution_number].get_machine_two()[i]->get_duration() << ",";
-                maintenance_index_m2++;
-            }
-            else    file << "op2_" << solutions[solution_number].get_machine_two()[i]->get_task_index() <<
-                        "," << solutions[solution_number].get_machine_two()[i]->get_start() <<
+                if( i == 0 && solutions[solution_number].get_machine_two()[i]->get_start() != 0 )
+                {
+                    file << "idle" << idle_index_m2 << "_" << "M2,0," << solutions[solution_number].get_machine_two()[i]->get_start() << ",";
+                    idle_index_m2++;
+                    all_idle_duration_m2 += solutions[solution_number].get_machine_two()[i]->get_start();
+                }
+                else if( solutions[solution_number].get_machine_two()[i - 1]->get_start() + solutions[solution_number].get_machine_two()[i - 1]->get_duration() !=
+                        solutions[solution_number].get_machine_two()[i]->get_start() )
+                {
+                    file << "idle" << idle_index_m2 << "_" << "M2," <<
+                        solutions[solution_number].get_machine_two()[i - 1]->get_start() + solutions[solution_number].get_machine_two()[i - 1]->get_duration() <<
+                            "," << solutions[solution_number].get_machine_two()[i]->get_start() -
+                                (solutions[solution_number].get_machine_two()[i - 1]->get_start() + solutions[solution_number].get_machine_two()[i - 1]->get_duration()) << ",";
+                    idle_index_m2++;
+                    all_idle_duration_m2 += solutions[solution_number].get_machine_two()[i]->get_start() -
+                        (solutions[solution_number].get_machine_two()[i - 1]->get_start() + solutions[solution_number].get_machine_two()[i - 1]->get_duration());
+                }
+                if( solutions[solution_number].get_machine_two()[i]->is_maintenance() )
+                {
+                    file << "maint" << maintenance_index_m2 << "_M2," <<
+                        solutions[solution_number].get_machine_two()[i]->get_start() <<
                             "," << solutions[solution_number].get_machine_two()[i]->get_duration() << ",";
+                    maintenance_index_m2++;
+                }
+                else    file << "op2_" << solutions[solution_number].get_machine_two()[i]->get_task_index() <<
+                            "," << solutions[solution_number].get_machine_two()[i]->get_start() <<
+                                "," << solutions[solution_number].get_machine_two()[i]->get_duration() << ",";
+            }
+            file << endl << "M1_maint: " << maintenance_index_m1 << "," << maintenance_index_m1 * Constance::duration_maintenance << endl <<
+                "M2_maint: " << maintenance_index_m2 << "," << maintenance_index_m2 * Constance::duration_maintenance << endl <<
+                    "M1_idle: " << idle_index_m1 << "," << all_idle_duration_m1 << endl <<
+                        "M2_idle: " << idle_index_m2 << "," << all_idle_duration_m2 << endl;
         }
-        file << endl << "M1_maint: " << maintenance_index_m1 << "," << maintenance_index_m1 * Constance::duration_maintenance << endl <<
-            "M2_maint: " << maintenance_index_m2 << "," << maintenance_index_m2 * Constance::duration_maintenance << endl <<
-                "M1_idle: " << idle_index_m1 << "," << all_idle_duration_m1 << endl <<
-                    "M2_idle: " << idle_index_m2 << "," << all_idle_duration_m2 << endl;
+        else cout << "Blad otwarcia pliku" << endl;
+        file.close();
+
+        idle_index_m1 = 1;
+        maintenance_index_m1 = 1;
+        idle_index_m2 = 1;
+        maintenance_index_m2 = 1;
+        all_idle_duration_m1 = 0;
+        all_idle_duration_m2 = 0;
     }
-    else cout << "Blad otwarcia pliku" << endl;
-    file.close();
 }
 
 void Instance::insertion_sort_machine_one( int solution_index, int operations_on_machine )
@@ -273,7 +282,7 @@ void Instance::insertion_sort_solutions( int chosen_solutions_amount )
     for ( int i = chosen_solutions_amount + 1; i < Constance::crossed_solutions + Constance::n_solutions; i++ )
     {
         j = i - 1;
-        while ( (j >= 0) && (target_function( j + 1 ) < target_function( j )) )
+        while ( (j >= chosen_solutions_amount ) && (target_function( j + 1 ) < target_function( j )) )
         {
             pom = solutions[j + 1];
             solutions[j + 1] = solutions[j];
@@ -350,6 +359,8 @@ void Instance::generate_solutions()
             j++;
 
         }
+        solutions[ind].set_machine_one_operations_number( operations_on_machine);
+
         //maszyna nr 2
         for ( int i = 0; i < Constance::n_tasks; i++ ) used[i] = 0;
         index_on_machine = 0;
@@ -403,6 +414,7 @@ void Instance::generate_solutions()
             used[task_index] = 1;
             j++;
         }
+        solutions[ind].set_machine_two_operations_number( operations_on_machine );
     }
 }
 
@@ -440,7 +452,9 @@ void Instance::selection( int time )
         proportion++;
     }
     //turniej
+    cout<<"in"<<endl;
     insertion_sort_solutions( chosen_solutions_amount );
+    cout<<"out"<<endl;
 }
 
 void Instance::crossing()
@@ -448,12 +462,12 @@ void Instance::crossing()
 	//losowanie rozwi¹zañ
 
 	int solution1_index = rand() % Constance::n_solutions;
-	cout << solution1_index << endl;
+	//cout << solution1_index << endl;
 
 	int solution2_index = rand() % Constance::n_solutions;
 	while (solution2_index == solution1_index)
 		solution2_index = rand() % Constance::n_solutions;
-	cout << solution2_index << endl;
+	//cout << solution2_index << endl;
 
 	//wstawianie maintenance
 	Solutions *solution1, *solution2;
@@ -699,19 +713,23 @@ void Instance::mutation()
         if( swapped )
         {
             //maszyna druga
-            int end_time = 0, index_on_machine_two = 0;
+            int end_time = 0;
             for( int ind = 0; ind < Constance::n_tasks + Constance::n_maintenance; ind++ )
             {
                 if( solutions[solution_index].get_machine_one()[task_index_second]->get_task_index() == solutions[solution_index].get_machine_two()[ind]->get_task_index() )
                 {
-                    index_on_machine_two = ind;
+                    cout<<"in"<<ind;
+                    solutions[solution_index].get_machine_two()[ind]->set_start( solutions[solution_index].get_machine_two()[54]->get_start() + solutions[solution_index].get_machine_two()[54]->get_duration() + 1 );
+                    cout<<"out";
                     break;
                 }
             }
-
+            //cout<<"insert"<<endl;
+            solutions[solution_index].set_machine_two_operations_number( Constance::n_tasks + Constance::n_maintenance - 1 );
             solutions[solution_index].insert_operation(2, tasks[ solutions[solution_index].get_machine_one()[task_index_second]->get_task_index() ].get_operation2(), end_time, solutions[solution_index].get_machine_one()[task_index_second]->get_start() + solutions[solution_index].get_machine_one()[task_index_second]->get_duration() );
-            insertion_sort_machine_two(solution_index, 55);
-
+            cout<<solution_index<<" sort"<<endl;
+            //insertion_sort_machine_two(solution_index, 55);
+            cout<<"koniec sort"<<endl;
             solution_index++;
             swapped = false;
         }
