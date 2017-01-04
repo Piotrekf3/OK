@@ -16,11 +16,6 @@ Solutions::Solutions()
 Solutions::~Solutions()
 {
 }
-/*bool Solutions::set_solution_indeks(int indeks) sprawdzalem na potrzeby selekcji (numerowalem rozwiazania)
-{
-    this->solution_indeks = indeks;
-    return true;
-}*/
 Operation** Solutions::get_machine_one()
 {
     return machine_one;
@@ -52,10 +47,10 @@ void Solutions::insert_operation(int machine_number, Operation * operation,int &
 			{
 				i++;
 			}
-			
+
 			if (machine_one[i]->get_start() + machine_one[i]->get_duration() >= insert_time)
-				temp->set_start(machine_one[i]->get_start() + machine_one[i]->get_duration()); //ustawia czas na pierwsz¹ woln¹ przerwê
-	
+				temp->set_start(machine_one[i]->get_start() + machine_one[i]->get_duration()); //ustawia czas na pierwszÂ¹ wolnÂ¹ przerwÃª
+
 			else
 				temp->set_start(insert_time);
 		}
@@ -63,7 +58,7 @@ void Solutions::insert_operation(int machine_number, Operation * operation,int &
 		{
 			machine_one[machine_one_operations_number] = temp; //wstawianie
 			inserted_end_time = temp->get_start() + temp->get_duration();
-			std::cout << "inserted_end_time =" << inserted_end_time << std::endl;
+			//std::cout << "inserted_end_time =" << inserted_end_time << std::endl;
 			machine_one_operations_number++;
 			this->insertion_sort_machine_one(machine_one_operations_number);
 		}
@@ -89,7 +84,7 @@ void Solutions::insert_operation(int machine_number, Operation * operation,int &
 			}
 
 			if (machine_two[i]->get_start() + machine_two[i]->get_duration() >= insert_time)
-				temp->set_start(machine_two[i]->get_start() + machine_two[i]->get_duration()); //ustawia czas na pierwsz¹ woln¹ przerwê
+				temp->set_start(machine_two[i]->get_start() + machine_two[i]->get_duration()); //ustawia czas na pierwszÂ¹ wolnÂ¹ przerwÃª
 
 			else
 				temp->set_start(insert_time);
