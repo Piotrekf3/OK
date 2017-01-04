@@ -73,8 +73,6 @@ void Instance::load_from_file(const string & filename)
 	if (file.is_open())
 	{
 		getline(file, temp);
-		temp2 = temp[0] + temp[1];
-		solutions_number = atoi(temp2.c_str());
 		for (int i = 0; i < Constance::n_tasks; i++)
 		{
 			getline(file, temp);
@@ -621,7 +619,7 @@ void Instance::crossing()
 	solutions_number++;
 	solutions[solutions_number] = *solution2;
 	solutions_number++;
-	cout << "solutions number=" << solutions_number << endl;
+	//cout << "solutions number=" << solutions_number << endl;
 }
 
 void Instance::mutation()
@@ -703,18 +701,17 @@ void Instance::mutation()
         if( swapped )
         {
             //maszyna druga
-            int end_time = 0, index_on_machine_two = 0;
+			int end_time = 0;
             for( int ind = 0; ind < Constance::n_tasks + Constance::n_maintenance; ind++ )
             {
                 if( solutions[solution_index].get_machine_one()[task_index_second]->get_task_index() == solutions[solution_index].get_machine_two()[ind]->get_task_index() )
                 {
-                    index_on_machine_two = ind;
                     break;
                 }
             }
 
             solutions[solution_index].insert_operation(2, tasks[ solutions[solution_index].get_machine_one()[task_index_second]->get_task_index() ].get_operation2(), end_time, solutions[solution_index].get_machine_one()[task_index_second]->get_start() + solutions[solution_index].get_machine_one()[task_index_second]->get_duration() );
-            insertion_sort_machine_two(solution_index, 55);
+            //insertion_sort_machine_two(solution_index, 55);
 
             solution_index++;
             swapped = false;
