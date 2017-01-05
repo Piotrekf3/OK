@@ -437,7 +437,7 @@ void Instance::selection( int time )
     else if( time < 3 ) proportion = 0.5 * (Constance::n_solutions );
     else if( time < 4 ) proportion = 0.6 * (Constance::n_solutions );
     else if( time < 5 ) proportion = 0.7 * (Constance::n_solutions );
-    else proportion = 0.8 * ( Constance::crossed_solutions + Constance::n_solutions );
+    else proportion = 0.8 * ( Constance::n_solutions );
 
     //ruletka
     while( proportion < Constance::n_solutions)
@@ -690,8 +690,6 @@ void Instance::mutation()
                  &&
                  tasks[ solutions[solution_index].get_machine_one()[task_index_second]->get_task_index() ].get_ready_time() <= solutions[solution_index].get_machine_one()[task_index_first]->get_start() )
         {
-          //  cout<<"first=poczatek i drugi = koniec"<<endl;
-            //cout<<solution_index<<endl;
             solutions[solution_index].get_machine_one()[task_index_first]->set_start( solutions[solution_index].get_machine_one()[task_index_second]->get_start() );
             solutions[solution_index].get_machine_one()[task_index_second]->set_start( tasks[ solutions[solution_index].get_machine_one()[task_index_second]->get_task_index() ].get_ready_time() );
             temp = solutions[solution_index].get_machine_one()[task_index_first];
@@ -702,19 +700,51 @@ void Instance::mutation()
 
         if( swapped )
         {
-            //maszyna druga
-			int end_time = 0;
+            //znalezienie 2 operacji o indeksie rownym 1 operacji
+			int end_time = 0, index_on_machine_two_like_on_one = 0;
             for( int ind = 0; ind < Constance::n_tasks + Constance::n_maintenance; ind++ )
             {
                 if( solutions[solution_index].get_machine_one()[task_index_second]->get_task_index() == solutions[solution_index].get_machine_two()[ind]->get_task_index() )
                 {
+                    index_on_machine_two_like_on_one = ind;
                     break;
                 }
             }
 
-            solutions[solution_index].insert_operation(2, tasks[ solutions[solution_index].get_machine_one()[task_index_second]->get_task_index() ].get_operation2(), end_time, solutions[solution_index].get_machine_one()[task_index_second]->get_start() + solutions[solution_index].get_machine_one()[task_index_second]->get_duration() );
-            //insertion_sort_machine_two(solution_index, 55);
+            int index_on_machine = 0; //szukanie przerw na 2 maszynie
+            //korekcja na drugiej maszynie
+            while( index_on_machine < Constance::n_tasks + Constance::n_maintenance )
+            {
+                if( index_on_machine == 0 )
+                {//zmiana ponizszego warunku
+                    if( solutions[solution_index].get_machine_one()[task_index_second]->get_start() + solutions[solution_index].get_machine_one()[task_index_second]->get_duration() + solutions[solution_index].get_machine_two()[index_on_machine_two_like_on_one]->get_duration() < solutions[solution_index].get_machine_two()[index_on_machine]->get_start() )
+                    {
+                        solutions[solution_index].get_machine_two()[index_on_machine_two_like_on_one]->set_start( solutions[solution_index].get_machine_one()[task_index_second]->get_start() + solutions[solution_index].get_machine_one()[task_index_second]->get_duration() );
+                        break;
+                    }
+                }
+                else if( index_on_machine == Constance::n_tasks + Constance::n_maintenance - 1 )
+                {
+                    if( solutions[solution_index].get_machine_one()[task_index_second]->get_start() + solutions[solution_index].get_machine_one()[task_index_second]->get_duration() >= solutions[solution_index].get_machine_two()[index_on_machine]->get_start() + solutions[solution_index].get_machine_two()[index_on_machine]->get_duration() )
+                        solutions[solution_index].get_machine_two()[index_on_machine_two_like_on_one]->set_start( solutions[solution_index].get_machine_one()[task_index_second]->get_start() + solutions[solution_index].get_machine_one()[task_index_second]->get_duration() );
+                    else
+                        solutions[solution_index].get_machine_two()[index_on_machine_two_like_on_one]->set_start( solutions[solution_index].get_machine_two()[index_on_machine]->get_start() + solutions[solution_index].get_machine_two()[index_on_machine]->get_duration() );
+                    break;
+                }
+                else
+                {
+                    if( (solutions[solution_index].get_machine_one()[task_index_second]->get_start() + solutions[solution_index].get_machine_one()[task_index_second]->get_duration() <= solutions[solution_index].get_machine_two()[index_on_machine]->get_start() + solutions[solution_index].get_machine_two()[index_on_machine]->get_duration())
+                        &&
+                        solutions[solution_index].get_machine_two()[index_on_machine]->get_start() + solutions[solution_index].get_machine_two()[index_on_machine]->get_duration() + solutions[solution_index].get_machine_two()[index_on_machine_two_like_on_one]->get_duration() < solutions[solution_index].get_machine_two()[index_on_machine + 1]->get_start())
+                    {
+                        solutions[solution_index].get_machine_two()[index_on_machine_two_like_on_one]->set_start( solutions[solution_index].get_machine_two()[index_on_machine]->get_start() + solutions[solution_index].get_machine_two()[index_on_machine]->get_duration() );
+                        break;
+                    }
+                }
+                index_on_machine++;
+            }
 
+            insertion_sort_machine_two(solution_index, 55);
             solution_index++;
             swapped = false;
         }
