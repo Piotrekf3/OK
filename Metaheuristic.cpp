@@ -7,11 +7,10 @@ int main()
 {
 	srand(time(NULL));
 	Instance instance;
-	cout << instance.solutions_number << endl;
 	instance.load_from_file("../../Instances/Instancja1.txt");
 	instance.generate_solutions();
 	time_t start = time(NULL);
-	while (difftime(time(NULL), start) < 5)
+	while (difftime(time(NULL), start) <= 5)
 	{
 		instance.mutation();
 		for (int i = 0; i < 50;i++)
