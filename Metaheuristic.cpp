@@ -13,7 +13,7 @@ int main()
 	time_t start = time(NULL);
 	while (difftime(time(NULL), start) <= 5)
 	{
-		instance.mutation();
+		//instance.mutation();
 		for (int i = 0; i < 50;i++)
 		instance.crossing();
 		instance.selection(difftime(time(NULL), start));

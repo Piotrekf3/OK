@@ -452,9 +452,9 @@ void Instance::selection( int time )
     //turniej
     insertion_sort_solutions( chosen_solutions_amount );
 	solutions_number = Constance::n_solutions;
-	for (int i = 0; i < Constance::n_solutions; i++)
-		cout << target_function(i) << endl;
-	cout << endl;
+	//for (int i = 0; i < Constance::n_solutions; i++)
+		//cout << target_function(i) << endl;
+	//cout << endl;
 }
 
 void Instance::crossing()
