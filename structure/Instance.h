@@ -28,7 +28,8 @@ public:
 	void generate_instance_to_file();
 	void load_from_file(const string & filename);
 	void generate_solutions();
-	void save_solution_to_file();
+	void save_solution_to_file(int number);
+	void save_best_solution();
 	void selection( int time );
 	void crossing();
 	void mutation();
