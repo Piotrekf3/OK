@@ -11,12 +11,14 @@ int main()
 	instance.generate_solutions();
 	instance.save_solution_to_file(Constance::n_solutions);
 	time_t start = time(NULL);
-	while (difftime(time(NULL), start) <= 5)
+	int duration = 0;
+	while (duration <= 5)
 	{
-		//instance.mutation();
+		instance.mutation(duration);
 		for (int i = 0; i < 50;i++)
 		instance.crossing();
-		instance.selection(difftime(time(NULL), start));
+		instance.selection(duration);
+		duration = difftime(time(NULL), start);
 	}
 	cout << "koniec\n";
 	instance.save_best_solution();

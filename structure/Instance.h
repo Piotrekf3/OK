@@ -32,7 +32,7 @@ public:
 	void save_best_solution();
 	void selection( int time );
 	void crossing();
-	void mutation();
+	void mutation(int time);
 	Task get_task(int index){ return tasks[index]; }
 	Operation get_maintenance(int index){ return maintenance[index]; }
 	Solutions get_solution(int index){ return solutions[index]; }

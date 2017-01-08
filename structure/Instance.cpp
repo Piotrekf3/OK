@@ -633,16 +633,22 @@ void Instance::crossing()
 	//cout << "solutions number=" << solutions_number << endl;
 }
 
-void Instance::mutation()
+void Instance::mutation(int time)
 {
     int task_index_first = rand() % ( Constance::n_tasks + Constance::n_maintenance ),
         task_index_second = rand() % ( Constance::n_tasks + Constance::n_maintenance ),
         solution_index = 0;
     bool swapped = false;
     Operation* temp;
-
+	int proportion;
+	if (time < 1) proportion = 0.5 * (Constance::n_solutions);
+	else if (time < 2) proportion = 0.4 * (Constance::n_solutions);
+	else if (time < 3) proportion = 0.3 * (Constance::n_solutions);
+	else if (time < 4) proportion = 0.2 * (Constance::n_solutions);
+	else if (time < 5) proportion = 0.1 * (Constance::n_solutions);
+	else proportion = 0 * (Constance::n_solutions);
     //maszyna 1
-    while( solution_index < Constance::n_solutions )
+    while( solution_index < proportion)
     {
         while( task_index_first >= task_index_second ||
                solutions[solution_index].get_machine_one()[task_index_first]->is_maintenance() ||
@@ -853,5 +859,7 @@ void Instance::save_best_solution()
 				"M2_idle: " << idle_index_m2 << "," << all_idle_duration_m2 << endl;
 		}
 		else cout << "Blad otwarcia pliku" << endl;
+		solutions[solution_number].show(1);
+		solutions[solution_number].show(2);
 		file.close();
 }
