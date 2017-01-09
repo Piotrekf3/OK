@@ -275,9 +275,9 @@ void Instance::generate_solutions()
 
         task_index = rand() % (Constance::n_tasks);
 
-        for ( int k = 5 ; k < Constance::n_maintenance * 2; k++ )
+        for ( int k = Constance::n_maintenance ; k < Constance::n_maintenance * 2; k++ )
         {
-            solutions[ind].get_machine_two()[k - 5] = &maintenance[k];
+            solutions[ind].get_machine_two()[k - Constance::n_maintenance] = &maintenance[k];
         }
         operations_on_machine = Constance::n_maintenance;
 
