@@ -5,11 +5,17 @@ Instance::Instance()
 {
     solutions = new Solutions[Constance::n_solutions + Constance::crossed_solutions];
     solutions_number = Constance::n_solutions;
+    begin_time = 0;
 }
 
 Instance::~Instance()
 {
 	delete[] this->solutions;
+}
+
+void Instance::set_begin_time( int new_time )
+{
+    this->begin_time = new_time;
 }
 
 void Instance::generate_instance_to_file()
@@ -140,104 +146,6 @@ void Instance::load_from_file(const string & filename)
 		cout << "nie dziala" << endl;
 
 	file.close();
-}
-
-void Instance::save_solution_to_file(int number)
-{
-	int best_time, begin_time, idle_index_m1 = 1, maintenance_index_m1 = 1, idle_index_m2 = 1, maintenance_index_m2 = 1, all_idle_duration_m1 = 0,
-		all_idle_duration_m2 = 0;
-	ostringstream i_s;
-	string file_name;
-	ofstream file;
-	for (int solution_number = 0; solution_number < number; solution_number++)
-	{
-		i_s << solution_number + 1;                     //konwersja z int na string
-		file_name = "../Solutions/Solution" + i_s.str() + ".txt";   //nazwa pliku (scie¿ka)
-		file.open(file_name.c_str());
-		if (file.good())
-		{
-			begin_time = target_function(solution_number);
-			best_time = 100; //zmienic
-			file << best_time << "," <<
-				begin_time << endl;
-			file << "M1: ";
-			for (int i = 0; i < Constance::n_tasks + Constance::n_maintenance; i++)
-			{
-				if (i == 0 && solutions[solution_number].get_machine_one()[i]->get_start() != 0)
-				{
-					file << "idle" << idle_index_m1 << "_" << "M1,0," << solutions[solution_number].get_machine_one()[i]->get_start() << ",";
-					idle_index_m1++;
-					all_idle_duration_m1 += solutions[solution_number].get_machine_one()[i]->get_start();
-				}
-				else if (solutions[solution_number].get_machine_one()[i - 1]->get_start() + solutions[solution_number].get_machine_one()[i - 1]->get_duration() !=
-					solutions[solution_number].get_machine_one()[i]->get_start())
-				{
-					file << "idle" << idle_index_m1 << "_" << "M1," <<
-						solutions[solution_number].get_machine_one()[i - 1]->get_start() + solutions[solution_number].get_machine_one()[i - 1]->get_duration() <<
-						"," << solutions[solution_number].get_machine_one()[i]->get_start() -
-						(solutions[solution_number].get_machine_one()[i - 1]->get_start() + solutions[solution_number].get_machine_one()[i - 1]->get_duration()) << ",";
-					idle_index_m1++;
-					all_idle_duration_m1 += solutions[solution_number].get_machine_one()[i]->get_start() -
-						(solutions[solution_number].get_machine_one()[i - 1]->get_start() + solutions[solution_number].get_machine_one()[i - 1]->get_duration());
-				}
-				if (solutions[solution_number].get_machine_one()[i]->is_maintenance())
-				{
-					file << "maint" << maintenance_index_m1 << "_M1," <<
-						solutions[solution_number].get_machine_one()[i]->get_start() <<
-						"," << solutions[solution_number].get_machine_one()[i]->get_duration() << ",";
-					maintenance_index_m1++;
-				}
-				else    file << "op1_" << solutions[solution_number].get_machine_one()[i]->get_task_index() <<
-					"," << solutions[solution_number].get_machine_one()[i]->get_start() <<
-					"," << solutions[solution_number].get_machine_one()[i]->get_duration() << ",";
-			}
-			file << endl << "M2: ";
-			for (int i = 0; i < Constance::n_tasks + Constance::n_maintenance; i++)
-			{
-				if (i == 0 && solutions[solution_number].get_machine_two()[i]->get_start() != 0)
-				{
-					file << "idle" << idle_index_m2 << "_" << "M2,0," << solutions[solution_number].get_machine_two()[i]->get_start() << ",";
-					idle_index_m2++;
-					all_idle_duration_m2 += solutions[solution_number].get_machine_two()[i]->get_start();
-				}
-				else if (solutions[solution_number].get_machine_two()[i - 1]->get_start() + solutions[solution_number].get_machine_two()[i - 1]->get_duration() !=
-					solutions[solution_number].get_machine_two()[i]->get_start())
-				{
-					file << "idle" << idle_index_m2 << "_" << "M2," <<
-						solutions[solution_number].get_machine_two()[i - 1]->get_start() + solutions[solution_number].get_machine_two()[i - 1]->get_duration() <<
-						"," << solutions[solution_number].get_machine_two()[i]->get_start() -
-						(solutions[solution_number].get_machine_two()[i - 1]->get_start() + solutions[solution_number].get_machine_two()[i - 1]->get_duration()) << ",";
-					idle_index_m2++;
-					all_idle_duration_m2 += solutions[solution_number].get_machine_two()[i]->get_start() -
-						(solutions[solution_number].get_machine_two()[i - 1]->get_start() + solutions[solution_number].get_machine_two()[i - 1]->get_duration());
-				}
-				if (solutions[solution_number].get_machine_two()[i]->is_maintenance())
-				{
-					file << "maint" << maintenance_index_m2 << "_M2," <<
-						solutions[solution_number].get_machine_two()[i]->get_start() <<
-						"," << solutions[solution_number].get_machine_two()[i]->get_duration() << ",";
-					maintenance_index_m2++;
-				}
-				else    file << "op2_" << solutions[solution_number].get_machine_two()[i]->get_task_index() <<
-					"," << solutions[solution_number].get_machine_two()[i]->get_start() <<
-					"," << solutions[solution_number].get_machine_two()[i]->get_duration() << ",";
-			}
-			file << endl << "M1_maint: " << maintenance_index_m1 << "," << maintenance_index_m1 * Constance::duration_maintenance << endl <<
-				"M2_maint: " << maintenance_index_m2 << "," << maintenance_index_m2 * Constance::duration_maintenance << endl <<
-				"M1_idle: " << idle_index_m1 << "," << all_idle_duration_m1 << endl <<
-				"M2_idle: " << idle_index_m2 << "," << all_idle_duration_m2 << endl;
-		}
-		else cout << "Blad otwarcia pliku" << endl;
-		file.close();
-
-		idle_index_m1 = 1;
-		maintenance_index_m1 = 1;
-		idle_index_m2 = 1;
-		maintenance_index_m2 = 1;
-		all_idle_duration_m1 = 0;
-		all_idle_duration_m2 = 0;
-		i_s.str("");
-	}
 }
 
 void Instance::insertion_sort_machine_one( int solution_index, int operations_on_machine )
@@ -711,7 +619,7 @@ void Instance::mutation(int time)
         if( swapped )
         {
             //znalezienie 2 operacji o indeksie rownym 1 operacji
-			int end_time = 0, index_on_machine_two_like_on_one = 0;
+			int index_on_machine_two_like_on_one = 0;
             for( int ind = 0; ind < Constance::n_tasks + Constance::n_maintenance; ind++ )
             {
                 if( solutions[solution_index].get_machine_one()[task_index_second]->get_task_index() == solutions[solution_index].get_machine_two()[ind]->get_task_index() )
@@ -766,16 +674,13 @@ void Instance::mutation(int time)
     }
 }
 
-int Instance::save_best_solution()
+void Instance::save_best_solution()
 {
-	int best_time, begin_time, idle_index_m1 = 1, maintenance_index_m1 = 1, idle_index_m2 = 1, maintenance_index_m2 = 1, all_idle_duration_m1 = 0,
+	int best_time, idle_index_m1 = 1, maintenance_index_m1 = 1, idle_index_m2 = 1, maintenance_index_m2 = 1, all_idle_duration_m1 = 0,
 		all_idle_duration_m2 = 0;
-	ostringstream i_s;
-	string file_name;
 	ofstream file;
-		i_s << "best";                     //konwersja z int na string
-		file_name = "../Solutions/Solution" + i_s.str() + ".txt";   //nazwa pliku (scie¿ka)
-		file.open(file_name.c_str());
+
+		file.open("../Solutions/Solutionbest.txt");
 		int min = target_function(0);
 		int solution_number = 0;
 		for (int i = 0; i < Constance::n_solutions;i++)
@@ -784,12 +689,11 @@ int Instance::save_best_solution()
 			min = target_function(i);
 			solution_number = i;
 		}
-		//cout << "min=" << min << endl;
 
 		if (file.good())
 		{
-			begin_time = target_function(solution_number);
-			best_time = 100; //zmienic
+			best_time = target_function(solution_number);
+
 			file << best_time << "," <<
 				begin_time << endl;
 			file << "M1: ";
@@ -801,7 +705,7 @@ int Instance::save_best_solution()
 					idle_index_m1++;
 					all_idle_duration_m1 += solutions[solution_number].get_machine_one()[i]->get_start();
 				}
-				else if (solutions[solution_number].get_machine_one()[i - 1]->get_start() + solutions[solution_number].get_machine_one()[i - 1]->get_duration() !=
+				else if (i != 0 && solutions[solution_number].get_machine_one()[i - 1]->get_start() + solutions[solution_number].get_machine_one()[i - 1]->get_duration() !=
 					solutions[solution_number].get_machine_one()[i]->get_start())
 				{
 					file << "idle" << idle_index_m1 << "_" << "M1," <<
@@ -860,28 +764,38 @@ int Instance::save_best_solution()
 				"M2_idle: " << idle_index_m2 << "," << all_idle_duration_m2 << endl;
 		}
 		else cout << "Blad otwarcia pliku" << endl;
-		//solutions[solution_number].show(1);
-		//solutions[solution_number].show(2);
 		file.close();
-		return min;
 }
 
 void Instance::save_best_time()
 {
-	ostringstream i_s;
 	string file_name;
 	ofstream file;
-	i_s << "best";                     //konwersja z int na string
-	file_name = "../../Solutions/czasy" + i_s.str() + ".txt";   //nazwa pliku (scie¿ka)
+	file_name = "../Results.txt";   //nazwa pliku (scie¿ka)
 	file.open(file_name.c_str(),ios_base::app);
 	int min = target_function(0);
-	int solution_number = 0;
 	for (int i = 0; i < Constance::n_solutions; i++)
 	if (target_function(i)<min)
 	{
 		min = target_function(i);
-		solution_number = i;
 	}
 	file << min << endl;
+	file.close();
+}
+
+void Instance::save_begin_time()
+{
+	string file_name;
+	ofstream file;
+	file_name = "../Begin.txt";   //nazwa pliku (scie¿ka)
+	file.open(file_name.c_str(),ios_base::app);
+	int max = target_function(0);
+	for (int i = 0; i < Constance::n_solutions; i++)
+	if (target_function(i) > max)
+	{
+		max = target_function(i);
+	}
+	set_begin_time(max);
+	file << max << endl;
 	file.close();
 }
