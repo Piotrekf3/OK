@@ -30,6 +30,7 @@ public:
 	void generate_solutions();
 	void save_solution_to_file(int number);
 	void save_best_solution();
+	void save_best_time();
 	void selection( int time );
 	void crossing();
 	void mutation(int time);

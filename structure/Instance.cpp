@@ -641,12 +641,12 @@ void Instance::mutation(int time)
     bool swapped = false;
     Operation* temp;
 	int proportion;
-	if (time < 1) proportion = 0.5 * (Constance::n_solutions);
-	else if (time < 2) proportion = 0.4 * (Constance::n_solutions);
-	else if (time < 3) proportion = 0.3 * (Constance::n_solutions);
-	else if (time < 4) proportion = 0.2 * (Constance::n_solutions);
-	else if (time < 5) proportion = 0.1 * (Constance::n_solutions);
-	else proportion = 0 * (Constance::n_solutions);
+	if (time < 1) proportion = 0.3 * (Constance::n_solutions);
+	else if (time < 2) proportion = 0.2 * (Constance::n_solutions);
+	else if (time < 3) proportion = 0.1 * (Constance::n_solutions);
+	else if (time < 4) proportion = 0.0 * (Constance::n_solutions);
+	else if (time < 5) proportion = 0.0 * (Constance::n_solutions);
+	else proportion = 0.0 * (Constance::n_solutions);
     //maszyna 1
     while( solution_index < proportion)
     {
@@ -862,4 +862,24 @@ void Instance::save_best_solution()
 		solutions[solution_number].show(1);
 		solutions[solution_number].show(2);
 		file.close();
+}
+
+void Instance::save_best_time()
+{
+	ostringstream i_s;
+	string file_name;
+	ofstream file;
+	i_s << "best";                     //konwersja z int na string
+	file_name = "../../Solutions/czasy" + i_s.str() + ".txt";   //nazwa pliku (scie¿ka)
+	file.open(file_name.c_str(),ios_base::app);
+	int min = target_function(0);
+	int solution_number = 0;
+	for (int i = 0; i < Constance::n_solutions; i++)
+	if (target_function(i)<min)
+	{
+		min = target_function(i);
+		solution_number = i;
+	}
+	file << min << endl;
+	file.close();
 }
