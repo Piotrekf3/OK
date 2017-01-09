@@ -26,8 +26,8 @@ int main()
 		instance.save_best_time();
 	//cout << "start=" << instance.get_solution(1).get_machine_one()[54]->get_start() << endl;
 
-	cin.ignore();
-	cin.get();
+	//cin.ignore();
+	//cin.get();
 	return 0;
 
 }

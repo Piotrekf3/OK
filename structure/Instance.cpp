@@ -341,12 +341,12 @@ void Instance::selection( int time )
     int solution_index, chosen_solutions_amount = 0, proportion ;
     Solutions temp;
 
-    if( time < 1 ) proportion = 0.3 * (Constance::n_solutions );
-    else if( time < 2 ) proportion = 0.4 * (Constance::n_solutions );
-    else if( time < 3 ) proportion = 0.5 * (Constance::n_solutions );
-    else if( time < 4 ) proportion = 0.6 * (Constance::n_solutions );
-    else if( time < 5 ) proportion = 0.7 * (Constance::n_solutions );
-    else proportion = 0.8 * ( Constance::n_solutions );
+    if( time < 1 ) proportion = 0,3 * (Constance::n_solutions );
+    else if( time < 2 ) proportion = 0,4 * (Constance::n_solutions );
+    else if( time < 3 ) proportion = 0,5 * (Constance::n_solutions );
+    else if( time < 4 ) proportion = 0,6 * (Constance::n_solutions );
+    else if( time < 5 ) proportion = 0,7 * (Constance::n_solutions );
+    else proportion = 0,8 * ( Constance::n_solutions );
 
     //ruletka
     while( proportion < Constance::n_solutions)
@@ -780,6 +780,7 @@ void Instance::save_best_time()
 		min = target_function(i);
 	}
 	file << min << endl;
+	cout << "min=" << min << endl;
 	file.close();
 }
 
