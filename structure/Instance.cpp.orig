@@ -29,11 +29,11 @@ void Instance::generate_instance_to_file()
 
             for ( int i = 1; i <= Constance::n_tasks; i++ ) //operacje
             {
-                time_op1 = (rand()%Constance::time_op) + 1;
-                time_op2 = (rand()%Constance::time_op) + 1;         //do poustawiania
+                time_op1 = (rand()%20) + 1;
+                time_op2 = (rand()%20) + 1;         //do poustawiania
                 machine_number_one = 1;
                 machine_number_two = 2;
-                ready_time = (rand()%Constance::ready_time_op);
+                ready_time = (rand()%6);
 
 
                 file << time_op1 << ";"
@@ -44,7 +44,7 @@ void Instance::generate_instance_to_file()
             }
 
             file << "MAINTENANCE" << endl;
-            int start_maintenance = (rand()%Constance::time_op) + 5;
+            int start_maintenance = (rand()%6) + 5;
             for ( int i = 1; i <= Constance::n_maintenance*2; i++ )  //maintenancy
             {
                 if( i > Constance::n_maintenance ) machine_number_one = 2;
@@ -53,7 +53,7 @@ void Instance::generate_instance_to_file()
                     << machine_number_one << ";"
                         << Constance::duration_maintenance << ";"
                             << start_maintenance << ";" << endl;
-                start_maintenance = start_maintenance + Constance::duration_maintenance + (rand()%Constance::time_op) + 1;
+                start_maintenance = start_maintenance + Constance::duration_maintenance + (rand()%10) + 1;
             }
         }
         else cout << "Blad otwarcia pliku" << endl;
@@ -152,7 +152,7 @@ void Instance::save_solution_to_file(int number)
 	for (int solution_number = 0; solution_number < number; solution_number++)
 	{
 		i_s << solution_number + 1;                     //konwersja z int na string
-		file_name = "../Solutions/Solution" + i_s.str() + ".txt";   //nazwa pliku (scie¿ka)
+		file_name = "../../Solutions/Solution" + i_s.str() + ".txt";   //nazwa pliku (scie¿ka)
 		file.open(file_name.c_str());
 		if (file.good())
 		{
@@ -642,12 +642,12 @@ void Instance::mutation(int time)
     bool swapped = false;
     Operation* temp;
 	int proportion;
-	if (time < 1) proportion = 0.5 * (Constance::n_solutions);
-	else if (time < 2) proportion = 0.4 * (Constance::n_solutions);
-	else if (time < 3) proportion = 0.3 * (Constance::n_solutions);
-	else if (time < 4) proportion = 0.2 * (Constance::n_solutions);
-	else if (time < 5) proportion = 0.1 * (Constance::n_solutions);
-	else proportion = 0 * (Constance::n_solutions);
+	if (time < 1) proportion = 0.3 * (Constance::n_solutions);
+	else if (time < 2) proportion = 0.2 * (Constance::n_solutions);
+	else if (time < 3) proportion = 0.1 * (Constance::n_solutions);
+	else if (time < 4) proportion = 0.0 * (Constance::n_solutions);
+	else if (time < 5) proportion = 0.0 * (Constance::n_solutions);
+	else proportion = 0.0 * (Constance::n_solutions);
     //maszyna 1
     while( solution_index < proportion)
     {
@@ -766,7 +766,7 @@ void Instance::mutation(int time)
     }
 }
 
-int Instance::save_best_solution()
+void Instance::save_best_solution()
 {
 	int best_time, begin_time, idle_index_m1 = 1, maintenance_index_m1 = 1, idle_index_m2 = 1, maintenance_index_m2 = 1, all_idle_duration_m1 = 0,
 		all_idle_duration_m2 = 0;
@@ -774,7 +774,7 @@ int Instance::save_best_solution()
 	string file_name;
 	ofstream file;
 		i_s << "best";                     //konwersja z int na string
-		file_name = "../Solutions/Solution" + i_s.str() + ".txt";   //nazwa pliku (scie¿ka)
+		file_name = "../../Solutions/Solution" + i_s.str() + ".txt";   //nazwa pliku (scie¿ka)
 		file.open(file_name.c_str());
 		int min = target_function(0);
 		int solution_number = 0;
@@ -784,7 +784,7 @@ int Instance::save_best_solution()
 			min = target_function(i);
 			solution_number = i;
 		}
-		//cout << "min=" << min << endl;
+		cout << "min=" << min << endl;
 
 		if (file.good())
 		{
@@ -860,11 +860,11 @@ int Instance::save_best_solution()
 				"M2_idle: " << idle_index_m2 << "," << all_idle_duration_m2 << endl;
 		}
 		else cout << "Blad otwarcia pliku" << endl;
-		//solutions[solution_number].show(1);
-		//solutions[solution_number].show(2);
+		solutions[solution_number].show(1);
+		solutions[solution_number].show(2);
 		file.close();
-		return min;
 }
+<<<<<<< HEAD
 
 void Instance::save_best_time()
 {
@@ -885,3 +885,5 @@ void Instance::save_best_time()
 	file << min << endl;
 	file.close();
 }
+=======
+>>>>>>> 4f24a5435333904ce98c4a73c896fba5731d52e4
