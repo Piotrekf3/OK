@@ -301,12 +301,13 @@ void Instance::generate_solutions()
         j = 0;
         task_index = rand() % (Constance::n_tasks);
         index_on_machine = 0;
-        operations_on_machine = 5;
+
         //maszyna  nr  1
         for ( int k = 0; k < Constance::n_maintenance; k++ )
         {
             solutions[ind].get_machine_one()[k] = &maintenance[k];
         }
+        operations_on_machine = Constance::n_maintenance;
 
         while ( j < Constance::n_tasks )
         {
@@ -370,7 +371,7 @@ void Instance::generate_solutions()
         {
             solutions[ind].get_machine_two()[k - 5] = &maintenance[k];
         }
-        operations_on_machine = 5;
+        operations_on_machine = Constance::n_maintenance;
 
         while ( j < Constance::n_tasks )
         {
@@ -753,7 +754,7 @@ void Instance::mutation(int time)
                 index_on_machine++;
             }
 
-            insertion_sort_machine_two(solution_index, 55);
+            insertion_sort_machine_two(solution_index, Constance::n_tasks + Constance::n_maintenance );
             solution_index++;
             swapped = false;
         }
