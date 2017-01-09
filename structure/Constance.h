@@ -10,4 +10,6 @@ class Constance
         static const int n_solutions = 100;
         static const int duration_maintenance = 5;
         static const int crossed_solutions = 100;
+        static const int time_op = 20;
+        static const int ready_time_op = 6;
 };
