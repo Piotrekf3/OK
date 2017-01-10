@@ -13,7 +13,7 @@ int main()
 		//instance.save_solution_to_file(Constance::n_solutions);
 		time_t start = time(NULL);
 		int duration = 0;
-		while (duration <= 5)
+		while (duration <= 1)
 		{
 			instance.mutation(duration);
 			for (int i = 0; i < 50; i++)

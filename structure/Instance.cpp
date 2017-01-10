@@ -341,12 +341,12 @@ void Instance::selection( int time )
     int solution_index, chosen_solutions_amount = 0, proportion ;
     Solutions temp;
 
-    if( time < 1 ) proportion = 0.6 * (Constance::n_solutions );
-    else if( time < 2 ) proportion = 0.7 * (Constance::n_solutions );
-    else if( time < 3 ) proportion = 0.8 * (Constance::n_solutions );
-    else if( time < 4 ) proportion = 0.9 * (Constance::n_solutions );
-    else if( time < 5 ) proportion = 1 * (Constance::n_solutions );
-    else proportion = 1 * ( Constance::n_solutions );
+    if( time < 1 ) proportion = 0.3 * (Constance::n_solutions );
+    else if( time < 2 ) proportion = 0.4 * (Constance::n_solutions );
+    else if( time < 3 ) proportion = 0.5 * (Constance::n_solutions );
+    else if( time < 4 ) proportion = 0.6 * (Constance::n_solutions );
+    else if( time < 5 ) proportion = 0.7 * (Constance::n_solutions );
+    else proportion = 0.8 * ( Constance::n_solutions );
 
     //ruletka
     while( proportion < Constance::n_solutions)
@@ -550,11 +550,11 @@ void Instance::mutation(int time)
     bool swapped = false;
     Operation* temp;
 	int proportion;
-	if (time < 1) proportion = 0.5 * (Constance::n_solutions);
-	else if (time < 2) proportion = 0.4 * (Constance::n_solutions);
-	else if (time < 3) proportion = 0.3 * (Constance::n_solutions);
-	else if (time < 4) proportion = 0.2 * (Constance::n_solutions);
-	else if (time < 5) proportion = 0.1 * (Constance::n_solutions);
+	if (time < 1) proportion = 0.3 * (Constance::n_solutions);
+	else if (time < 2) proportion = 0.2 * (Constance::n_solutions);
+	else if (time < 3) proportion = 0.1 * (Constance::n_solutions);
+	else if (time < 4) proportion = 0.0 * (Constance::n_solutions);
+	else if (time < 5) proportion = 0.0 * (Constance::n_solutions);
 	else proportion = 0 * (Constance::n_solutions);
     //maszyna 1
     while( solution_index < proportion)
