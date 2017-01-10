@@ -361,9 +361,6 @@ void Instance::selection( int time )
     //turniej
     insertion_sort_solutions( chosen_solutions_amount );
 	solutions_number = Constance::n_solutions;
-	//for (int i = 0; i < Constance::n_solutions; i++)
-		//cout << target_function(i) << endl;
-	//cout << endl;
 }
 
 void Instance::crossing()
@@ -539,7 +536,6 @@ void Instance::crossing()
 	solutions_number++;
 	solutions[solutions_number] = *solution2;
 	solutions_number++;
-	//cout << "solutions number=" << solutions_number << endl;
 }
 
 void Instance::mutation(int time)
