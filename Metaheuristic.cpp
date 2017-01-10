@@ -8,7 +8,7 @@ int main()
 	srand(time(NULL));
 	Instance instance;
 	//instance.generate_instance_to_file(); generuje instancje
-		instance.load_from_file("../../Instances/Instancja1.txt");
+		instance.load_from_file("../../Instances/Instancja50.txt");
 		instance.generate_solutions();
 		instance.save_begin_time();
 		time_t start = time(NULL);
@@ -23,8 +23,8 @@ int main()
 		}
 		instance.save_best_solution();
 		cout << "koniec\n";
-	cin.ignore();
-	cin.get();
+	//cin.ignore();
+	//cin.get();
 	return 0;
 
 }

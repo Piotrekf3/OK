@@ -676,7 +676,7 @@ void Instance::save_best_solution()
 		all_idle_duration_m2 = 0;
 	ofstream file;
 
-		file.open("../../Solutions/Solutionbest.txt");
+		file.open("../../Solutions/Solutionbest50.txt");
 		int min = target_function(0);
 		int solution_number = 0;
 		for (int i = 0; i < Constance::n_solutions;i++)
