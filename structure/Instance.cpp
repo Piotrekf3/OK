@@ -546,11 +546,11 @@ void Instance::mutation(int time)
     bool swapped = false;
     Operation* temp;
 	int proportion;
-	if (time < 1) proportion = 0.3 * (Constance::n_solutions);
-	else if (time < 2) proportion = 0.2 * (Constance::n_solutions);
-	else if (time < 3) proportion = 0.1 * (Constance::n_solutions);
-	else if (time < 4) proportion = 0.0 * (Constance::n_solutions);
-	else if (time < 5) proportion = 0.0 * (Constance::n_solutions);
+	if (time < 1) proportion = 0.5 * (Constance::n_solutions);
+	else if (time < 2) proportion = 0.4 * (Constance::n_solutions);
+	else if (time < 3) proportion = 0.3 * (Constance::n_solutions);
+	else if (time < 4) proportion = 0.2 * (Constance::n_solutions);
+	else if (time < 5) proportion = 0.1 * (Constance::n_solutions);
 	else proportion = 0 * (Constance::n_solutions);
     //maszyna 1
     while( solution_index < proportion)
