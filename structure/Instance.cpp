@@ -341,12 +341,12 @@ void Instance::selection( int time )
     int solution_index, chosen_solutions_amount = 0, proportion ;
     Solutions temp;
 
-    if( time < 1 ) proportion = 0,3 * (Constance::n_solutions );
-    else if( time < 2 ) proportion = 0,4 * (Constance::n_solutions );
-    else if( time < 3 ) proportion = 0,5 * (Constance::n_solutions );
-    else if( time < 4 ) proportion = 0,6 * (Constance::n_solutions );
-    else if( time < 5 ) proportion = 0,7 * (Constance::n_solutions );
-    else proportion = 0,8 * ( Constance::n_solutions );
+    if( time < 1 ) proportion = 0.3 * (Constance::n_solutions );
+    else if( time < 2 ) proportion = 0.4 * (Constance::n_solutions );
+    else if( time < 3 ) proportion = 0.5 * (Constance::n_solutions );
+    else if( time < 4 ) proportion = 0.6 * (Constance::n_solutions );
+    else if( time < 5 ) proportion = 0.7 * (Constance::n_solutions );
+    else proportion = 0.8 * ( Constance::n_solutions );
 
     //ruletka
     while( proportion < Constance::n_solutions)
@@ -736,7 +736,7 @@ void Instance::save_best_solution()
 					idle_index_m2++;
 					all_idle_duration_m2 += solutions[solution_number].get_machine_two()[i]->get_start();
 				}
-				else if (solutions[solution_number].get_machine_two()[i - 1]->get_start() + solutions[solution_number].get_machine_two()[i - 1]->get_duration() !=
+				else if ( i != 0 && solutions[solution_number].get_machine_two()[i - 1]->get_start() + solutions[solution_number].get_machine_two()[i - 1]->get_duration() !=
 					solutions[solution_number].get_machine_two()[i]->get_start())
 				{
 					file << "idle" << idle_index_m2 << "_" << "M2," <<
